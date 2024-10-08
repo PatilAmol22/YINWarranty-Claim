@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>59.0</apiVersion>
+    <isExposed>true</isExposed>
+
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__Tab</target>
+        <target>lightning__FlowScreen</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+    <targetConfig targets="lightning__FlowScreen">
+        <property name="Email" type="String" label="Enter Customer Email"></property>
+        <property name="Phone" type="String" label="Enter Customer Phone"></property>
+        <property name="AdharNumber" type="String" label="Enter Customer Adhar Number"></property>
+        <property name="module" type="String" label="Enter module Name"></property>
+        <property name="IsOtpVerified" type="Boolean" label="Is OTP Verified?"></property>
+        <property name="TerritoryMappingId" type="String" label="Enter TerritoryMappingId"></property>
+        <property name="recordId" type="String" label="Passing Record Id"></property>
+    </targetConfig>
+</targetConfigs>
+</LightningComponentBundle>

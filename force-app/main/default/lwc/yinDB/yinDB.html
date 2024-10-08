@@ -1,0 +1,35 @@
+<!--
+  @description       : Dealer DashBoard.
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : Ski
+  @last modified on  : 04-10-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+
+    <div class="slds-theme_default">
+
+        <div class="slds-grid slds-wrap slds-gutters" style="margin: 0 auto;">
+           
+             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+            <lightning-card title="Profitability Trend" icon-name="utility:metrics">
+                 <!-- <svg class="custom-icon" area-hiddn="true">
+                    <use xlink:href={ProfitabilityIMG}></use>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+                    <use xlink:href={ProfitabilityIMG}></use>
+                </svg>  -->
+               <template if:true={chartConfiguration}>
+                    <c-yin-reusable-bar-chart-cmp chart-config={chartConfiguration}></c-yin-reusable-bar-chart-cmp>
+                </template>
+            </lightning-card>
+        </div> 
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                  <img src={yinBanner}  style="height:273px !important; float:right" /> 
+                  <!-- <img src={yinBanner}  style="height:273px !important; width: 100% !important;" />  -->
+                </div>
+        </div>
+    </div>
+     
+</template>

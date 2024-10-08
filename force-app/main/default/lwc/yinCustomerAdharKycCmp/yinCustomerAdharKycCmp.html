@@ -1,0 +1,114 @@
+<template>
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:10px;">
+
+                    <div class="slds-section__title-action" style="background:#262626 !important; color:#fff; font-weight:600; border-top-left-radius:4px; border-bottom-left-radius:4px; border-top-right-radius:4px; border-bottom-right-radius:4px; font-size:18px; padding:5px; margin-top:15px;">
+                      <lightning-icon label="" icon-name="utility:identity" style="color:#fff!important;"></lightning-icon>  
+                      <span style="margin-left:10px; font-size: 16px; font-weight: 500;">Customer Details</span>
+                    </div>
+
+                <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+                  
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 " style="margin-top: 10px;">
+                        <lightning-input type="email" label="Email" value={Email} disabled="True"></lightning-input>
+                    </div>	
+                   
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 " style="margin-top: 10px;">
+                        <lightning-input type="Phone" label="Phone" value={Phone} disabled="True"></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12"></div>
+
+              
+                      <template if:false={isOtpVerify} >
+                      
+                      <div class="slds-col slds-medium-size_12-of-12  slds-large-size_12-of-12">
+        
+                          <div class="slds-section__title-action" style="background:#000 !important; color:#fff; font-weight:600; border-top-left-radius:4px; border-bottom-left-radius:4px; border-top-right-radius:4px; border-bottom-right-radius:4px; font-size:18px; padding:5px; margin-top:15px;">
+                            
+                            <span style="margin-left:10px; font-size: 16px; font-weight: 500;">Aadhaar Verification</span>
+                        </div>
+        
+                          <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+                            <div class="slds-grid">
+        
+                              <!-- <div class="slds-col slds-large-size_6-of-12">
+                                <div class="slds-form-element__label" style="text-align: right; width: 100%; margin-top: 0.25rem;">Enter Aadhaar Number</div>
+                              </div> -->
+        
+                              <div class="slds-col slds-large-size_4-of-12" style="margin:0 auto;">
+                                <lightning-input label="Enter Aadhaar Number" type="text" value={maskedAadhar}   disabled onchange={handleChange}></lightning-input>
+                               
+                              </div>
+                            
+                            </div>
+                          </div>
+                        
+                          <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+                            <div class="slds-grid">
+        
+                          
+                          <div class="slds-col slds-large-size_8-of-12"  style="margin:0 auto;">
+                              
+                                      <lightning-input
+                                      name=""
+                                      label="I authorize to Verify My Aadhaar"
+                                      type="checkbox"
+                                      value={value}
+                                      onclick={handleChange1}
+                                      disabled={isDisabled}
+                                      checked={isChecked}
+                                      style="text-align: center;"
+                                      ></lightning-input>
+                                      
+                              </div>
+                            </div>
+        
+                          </div>
+                        </div>
+                      
+                      
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12"></div>
+
+                    <div  class="slds-size_12-of-12 slds-large-size_12-of-12" align="center" style="margin-top: 15px; padding-top: 20px;border-top:1px solid #c9c9c9;">
+                           <lightning-button label="Generate OTP" variant="brand" title="Generate OTP"
+                                    onclick={handleGenerateOtp} disabled={booleandisabled} style="padding-left:25px"></lightning-button>
+                    </div>
+
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 " style="margin-top: 20px;">
+                        <lightning-input type="text" label="Enter OTP" value={otpNumber} onchange={handleOtpChange} if:true={showOtpInput}></lightning-input>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12"></div>
+
+                    <div class="slds-size_12-of-12 slds-large-size_12-of-12" align="center" style="text-align:center; margin-top:10px; padding-left:40px">
+                           <lightning-button label="Verify OTP" variant="brand" title="Verify OTP" if:true={showOtpInput}
+                                    onclick={handleVerifyOtp} style="margin-left:-20px" ></lightning-button>
+                    </div>
+                  </template>
+                    </div>
+
+
+                        <div style="clear:both;"></div>
+
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+  
+    <footer class="slds-modal__footer">
+     
+      <lightning-button variant="brand" onclick={handleNext} name="Next" label="Next">
+      </lightning-button>
+  </footer>
+</template>

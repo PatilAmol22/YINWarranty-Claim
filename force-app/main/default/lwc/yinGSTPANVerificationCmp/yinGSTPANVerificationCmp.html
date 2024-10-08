@@ -1,0 +1,145 @@
+<!--
+@description       : PAN And GST Number Verification component.
+@author            : Amol Patil/amol.patil@skinternational.com
+@group             : SKI
+@last modified on  : 16-07-2024
+@last modified by  : Amol Patil/amol.patil@skinternational.com
+Modifications Log
+Ver   Date         Author                                      Modification
+1.0   15-07-2024   Amol Patil/amol.patil@skinternational.com   Initial Version
+-->
+
+<template>
+<div class="slds-is-relative">
+  <template if:true={showLoading}>
+      <div class="exampleHolder">
+          <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+      </div>
+  </template> 
+  <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+      <div class="slds-box">
+      <div class="slds-grid slds-wrap slds-gutters">
+          <div class="slds-col slds-medium-size_12-of-12  slds-large-size_12-of-12">
+      
+              <div class="slds-section__title-action" style="background:#262626 !important; color:#fff; font-weight:600; border-top-left-radius:4px; border-bottom-left-radius:4px; border-top-right-radius:4px; border-bottom-right-radius:4px; font-size:18px; padding:5px; margin-top:15px;">
+          <lightning-icon label="" icon-name="utility:identity" style="color:#fff!important;"></lightning-icon>  
+          <span style="margin-left:10px; font-size: 16px; font-weight: 500;">PAN Verification</span>
+        </div>
+
+              <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+                <div class="slds-grid">
+                
+                <div class="slds-col slds-large-size_4-of-12" style="margin:0 auto;">
+                  
+                      <lightning-input type="text" label="PAN Number" value={maskedPanNumber}  onchange={handleChange} disabled></lightning-input>
+                    
+                  </div>
+                
+                </div>
+              </div>
+
+              
+            
+              <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+                <div class="slds-grid">
+
+              <template if:false={isPanVerified}>
+               <div class="slds-col slds-large-size_8-of-12"  style="margin:0 auto;">
+                  
+                          <lightning-input
+                          name=""
+                          label="I authorize to Verify My PAN"
+                          type="checkbox"
+                          value={value}
+                          onclick={handlePANCheked}
+                          disabled={isDisabled}
+                          checked={isChecked}
+                          style="text-align: center;"
+                          ></lightning-input>
+                          
+                  </div> 
+                </template>
+                </div>
+
+              </div>
+            </div>
+          
+          
+        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12"></div>
+
+        <div  class="slds-size_12-of-12 slds-large-size_12-of-12" align="center" style="margin-top: 15px; padding-top: 20px;border-top:1px solid #c9c9c9;">
+                <lightning-button label="Verify PAN" variant="brand" title="Verify PAN"
+                        onclick={handleVerifyPAN} disabled={booleandisabled} style="padding-left:25px"></lightning-button>
+        </div>
+    
+      </div>
+          
+  </div>
+  <template if:true={isPanVerified}>
+  <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+    <div class="slds-box">
+    <div class="slds-grid slds-wrap slds-gutters">
+        <div class="slds-col slds-medium-size_12-of-12  slds-large-size_12-of-12">
+    
+            <div class="slds-section__title-action" style="background:#262626 !important; color:#fff; font-weight:600; border-top-left-radius:4px; border-bottom-left-radius:4px; border-top-right-radius:4px; border-bottom-right-radius:4px; font-size:18px; padding:5px; margin-top:15px;">
+        <lightning-icon label="" icon-name="utility:identity" style="color:#fff!important;"></lightning-icon>  
+        <span style="margin-left:10px; font-size: 16px; font-weight: 500;">GST Number Verification</span>
+      </div>
+
+            <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+              <div class="slds-grid">
+              
+              <div class="slds-col slds-large-size_4-of-12" style="margin:0 auto;">
+                
+                    <lightning-input type="text" label="GST Registration Number" value={maskedGstNumber} onchange={handleChange} disabled=""></lightning-input>
+                  
+                </div>
+              
+              </div>
+            </div>
+          
+            <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+              <div class="slds-grid">
+
+                <template if:false={isGSTVerified}>
+            <div class="slds-col slds-large-size_8-of-12"  style="margin:0 auto;">
+                
+                        <lightning-input
+                        name=""
+                        label="I authorize to Verify My GST Number"
+                        type="checkbox"
+                        value={value}
+                        onclick={handleGSTCheked}
+                        disabled={isDisabled1}
+                        checked={isChecked1}
+                        style="text-align: center;"
+                        ></lightning-input>
+                        
+                </div>
+                </template>
+              </div>
+
+            </div>
+          </div>
+        
+        
+      <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12"></div>
+
+      <div  class="slds-size_12-of-12 slds-large-size_12-of-12" align="center" style="margin-top: 15px; padding-top: 20px;border-top:1px solid #c9c9c9;">
+              <lightning-button label="Verify GST" variant="brand" title="Verify GST"
+                      onclick={handleVerifyGST} disabled={booleandisabled1} style="padding-left:25px"></lightning-button>
+      </div>
+    </div>
+    </div>
+  </div>
+</template>
+</div>
+</div>
+
+<footer class="slds-modal__footer">
+<lightning-button  variant="brand-outline" onclick={handlePrevious} name="Previous" label="Previous">
+</lightning-button>&nbsp;  
+<lightning-button variant="brand" onclick={handleNext} name="Next" label="Next">
+</lightning-button>
+</footer>
+</template>

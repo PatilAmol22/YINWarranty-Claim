@@ -1,0 +1,28 @@
+<!--
+  @description       : 
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @created date      : 25-09-2024
+  @last modified on  : 25-09-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+  Modifications Log
+  Ver   Date         Author                                      Modification
+  1.0   25-09-2024   Amol Patil/amol.patil@skinternational.com   Initial Version
+-->
+<template>
+
+    <div class="slds-theme_default">
+
+        <div class="slds-grid slds-wrap slds-gutters" style="margin: 0 auto;">
+           
+             <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                <lightning-card title="Profitability Trend" icon-name="utility:metrics">
+                
+                    <template if:true={chartConfiguration}>
+                        <c-yin-reusable-bar-chart-cmp chart-config={chartConfiguration}></c-yin-reusable-bar-chart-cmp>
+                    </template>
+                </lightning-card>
+            </div> 
+        </div>
+     </div>
+</template>

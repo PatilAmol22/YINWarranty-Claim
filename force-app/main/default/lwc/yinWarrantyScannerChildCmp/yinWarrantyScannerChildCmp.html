@@ -1,0 +1,156 @@
+<!--
+  @description       : Create Warranty Child Component.
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @last modified on  : 26-03-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <div class="slds-is-relative">
+        <template if:true={showLoading}>
+            <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+    </template> 
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+
+                    <div
+                        style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; border-top-left-radius:4px; border-top-right-radius:4px; font-size:16px; padding:5px;">
+                        <span style="font-size:14px; text-align:left;">Warranty Scanner</span>
+
+                    </div>
+
+                <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 5px;">
+                        <lightning-input type="text" label="Enter QR Code" value={qrCode} onchange={handleQRCodeChange} read-only={warrantyScannerChildObj.isEditable} disabled={qrCodeDisabled}></lightning-input>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12" style="margin-top:25px;">
+                            <lightning-button label="Verify" title="Verify" onclick={handleVerify} disabled={isVerifyDisabled}></lightning-button>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_7-of-12" style="margin-top:25px;">
+                    </div>
+                
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12" style="margin-top: 15px;">
+                    <lightning-input type="text" label="Serial Number" value={productObj.plantCode} disabled="true" ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12" style="margin-top: 18px;">
+                    <lightning-combobox name=""
+                                        label=""    
+                                        value={productObj.spectCode} 
+                                        options={options} 
+                                        onchange={handleChange}
+                                        read-only={warrantyScannerChildObj.isEditable}>
+                    </lightning-combobox>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12" style="margin-top: 18px;">
+                    <lightning-input type="text" name="weak Year" value={productObj.weekYear} onchange={handleYearChange} read-only={warrantyScannerChildObj.isEditable}></lightning-input>
+                </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Tyre Size" value={productObj.tyreSize} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Tyre Pattern" value={productObj.tyrePattern} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12" style="text-align:right; float:right; padding-right:20px; margin-top: 33px;">
+                            <lightning-button label="Add" variant="brand" title="Add" onclick={addDataInTable} disabled={isAddDisabled}></lightning-button>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top: 15px;">
+                            <div style="padding:5px;" class="slds-scrollable_x">
+             
+                                <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_striped slds-no-row-hover" style="border:1px solid rgb(229, 229, 229)" role="grid" aria-label="resized column">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align:center; padding:4px;">Sr. No.</th>
+                                        <th style="text-align:center; padding:4px;">Serial Number</th>
+                                        <th style="text-align:center; padding:4px;">Tyre Size</th>
+                                        <th style="text-align:center; padding:4px;">Tyre Pattern</th>
+                                        <th style="text-align:center; padding:4px;">QR Code</th>
+                                        <th style="text-align:center; padding:4px;">Action</th>
+                                    </tr>
+                                </thead>
+                        
+                                <tbody>
+                                    <template for:each={tyreList} for:item="tyre" for:index="index">
+                                        <tr key={tyre.index}> 
+
+                                        
+                                        <td style="text-align:center;">{tyre.index}</td>
+                                        <td style="text-align:center;">{tyre.tyreSerialNo}</td>
+                                        <td style="text-align:center;">{tyre.tyreSize}</td>
+                                        <td style="text-align:center;">{tyre.tyrePattern}</td>
+                                        <td style="text-align:center;">{tyre.barCode}</td>
+                                        <td style="text-align:center;">
+
+                                        <lightning-button-icon onclick={onRemoveRow} 
+                                                               name={tyre.index}
+                                                               icon-name="utility:delete" 
+                                                               variant="brand"
+                                                               alternative-text="Delete"  
+                                                               size="x-small" 
+                                                               class="slds-m-left_xx-small" 
+                                                               title="Delete"
+                                                               disabled={warrantyScannerChildObj.isEditable}>
+                                        </lightning-button-icon>
+                                       </td>
+                                    </tr>
+                                  </template>
+                                </tbody>
+            
+                            </table>
+            
+                        </div>
+                        </div>
+    
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <hr style="margin: 15px 0 10px;"></hr>
+                        </div>
+
+                        <div class="slds-size_6-of-12 slds-large-size_6-of-12"
+                            style="text-align:left; float:left; padding-left:15px;">
+                            <lightning-button label="Back" title="Back" onclick={handleClick}></lightning-button>
+                        </div>
+
+
+                        <div class="slds-size_6-of-12 slds-large-size_5-of-12"
+                            style="text-align:right; float:right; padding-right:15px;">
+                            <lightning-button label="Save As Draft" 
+                                              variant="brand-outline" 
+                                              title="Save As Draft"
+                                              onclick={handleClick}
+                                              disabled={nextDisabled}>
+                            </lightning-button>
+                        </div>
+
+                        <div class="slds-size_6-of-12 slds-large-size_1-of-12"
+                            style="text-align:right; float:right; padding-right:15px;">
+                            <lightning-button label="Next" 
+                                              variant="brand" 
+                                              title="Next"
+                                              onclick={handleClick}
+                                              disabled={nextDisabled}>
+                            </lightning-button>
+                        </div>
+
+                        <div style="clear:both;"></div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</template>

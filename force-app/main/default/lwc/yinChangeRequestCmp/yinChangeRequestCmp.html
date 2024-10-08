@@ -1,0 +1,400 @@
+<!--
+  @description       : Email,Phone And Address Change Request.
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SkI 
+  @last modified on  : 02-04-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <template if:false={aadharVerificationParam.epId}>
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <template if:true={ShowLoding}>
+            <div class="exampleHolder">
+                <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+            </div>
+        </template> 
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+
+                    <div class="slds-section__title-action"
+                         style="margin-top:0; margin-bottom:0px; background:#262626 !important; color:#fff; font-weight:600; border-top-left-radius:4px; border-top-right-radius:4px; font-size:16px; padding:5px;">
+                        <span style="margin:0 auto;">Change Request</span>
+                    </div>
+
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12"
+                         style="margin: 0 auto; margin-top: 20px; text-align:center;">
+                        <div class="slds-form-element__control">
+                            <lightning-radio-group name="radioGroup"
+                                                   options={options5}
+                                                   onchange={handleRadioChange}
+                                                   value={value5}
+                                                   type="radio" 
+                                                   class="customRadioCls">
+                            </lightning-radio-group>
+                        </div>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                    <div if:true={valueSelected1} class="slds-col slds-size_1-of-1 slds-large-size_10-of-12"
+                        style="margin: 0 auto; margin-top: 15px;">
+                        <lightning-input type="email" label="Email" placeholder="Enter New Email Address" value={changeRequestObj.emailId} onchange={handleEmailChange} required="true"></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                    <div if:true={valueSelected2} class="slds-col slds-size_1-of-1 slds-large-size_10-of-12"
+                        style="margin: 0 auto; margin-top: 15px;">
+                        <lightning-input type="text" label="Phone" placeholder="Enter New Mobile Number" value={changeRequestObj.phoneNo} onchange={handlePhoneChange} required="true"></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+
+
+                    <div if:true={showButtons} style="margin: 0 auto; text-align:center; margin-top:20px; margin-bottom:10px;">
+                        <lightning-button label="Cancel" title="Non-primary action" onclick={handleClose}
+                            class="slds-m-left_x-small"></lightning-button>
+
+                        <lightning-button variant="brand" label="Next" title="Primary action" onclick={handleSubmit}
+                            class="slds-m-left_x-small">
+                        </lightning-button>
+                    </div>
+
+                    <!--Address Section start here-->
+                    <div if:true={valueSelected3}>
+                    <div class="slds-section__title-action"
+                        style="margin-top:20px; margin-bottom:0px; background:#f1f1f1; color:#000; font-weight:600; font-size:16px; padding:5px;">
+                        <span style="margin:0 auto;">Change Billing Address</span>
+                    </div>
+
+                    <div class="slds-grid slds-wrap slds-gutters">
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Dealer" placeholder="Dealer Name" value={changeRequestObj.dealerName} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Dealer Code" placeholder="Dealer Code" value={changeRequestObj.dealerCode} disabled="true"></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Name" placeholder="Name" value={changeRequestObj.name} disabled="true"></lightning-input>
+                        </div>
+
+                        <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Name2" placeholder="Name2" value={changeRequestObj.name2} disabled="true"></lightning-input>
+                        </div> -->
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <lightning-textarea label="Billing Address 1" placeholder="Enter Billing Address 1" value={changeRequestObj.address1} onchange={handleAddress} required="true"></lightning-textarea>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <lightning-textarea label="Billing Address 2" placeholder="Enter Billing Address 2" value={changeRequestObj.address2} onchange={handleAddress}></lightning-textarea>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-record-picker object-api-name="YIN_Pincode__c"
+                                                    type="number" 
+                                                    label="Pincode" 
+                                                    placeholder="Enter Pincode"
+                                                    value={changeRequestObj.pincodeId}
+                                                    matching-info={matchingInfo}
+                                                    display-info={displayInfo} 
+                                                    filter={filter} 
+                                                    class="clear"
+                                                    onchange={handlePincode} 
+                                                    required="true"
+                                                    ></lightning-record-picker>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="State" placeholder="State" value={changeRequestObj.state} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                                <lightning-input type="text" label="District" placeholder="District"
+                               value={changeRequestObj.district} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Sub District" placeholder="Sub District" disabled="true"
+                            value={changeRequestObj.subDistrict}></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="City" placeholder="City" disabled="true"
+                            value={changeRequestObj.city}></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <div class="slds-form-element__control" style="display:inline-block;">
+                                <lightning-file-upload
+                                        label="Address Proof (GST Registration)"
+                                        name="fileUploader"
+                                        accept=".doc, .docx, .pdf .jpg, .png, .jpeg"
+                                        record-id={recordId}
+                                        required="true"
+                                        onuploadfinished={handleUploadFinished}
+                                    >
+                                    </lightning-file-upload>
+                                    <div if:true={uploadedFileName} style="color: blue;">
+                                        <div>
+                                            <b> Uploaded File: {uploadedFileName}</b>
+                                            <lightning-icon icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small"></lightning-icon>
+                                        </div>
+                                    </div>
+                                    <div class="slds-text-title_caps slds-m-top_small" if:false={uploadedFileName}>
+                                        Please upload a file of type:.pdf, .jpg, .png, .jpeg
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+
+                        <div style="margin: 0 auto; text-align:center; margin-top:20px; margin-bottom:10px;">
+                            <lightning-button label="Cancel" title="Non-primary action" onclick={handleClose}
+                                class="slds-m-left_x-small"></lightning-button>
+
+                            <lightning-button variant="brand" label="Submit" title="Primary action"
+                                onclick={handleSubmit} class="slds-m-left_x-small"></lightning-button>
+                        </div>
+
+                    </div>
+                    </div>
+
+                    <!--Address Section end here-->
+
+                     <!--Change Shipping Address Section Start here-->
+                    <div if:true={valueSelected4}>
+                    <div class="slds-section__title-action"
+                    style="margin-top:20px; margin-bottom:0px; background:#f1f1f1; color:#000; font-weight:600; font-size:16px; padding:5px;">
+                        <span style="margin:0 auto;">{shippinglable} Shipping Address</span>
+                    </div>
+
+                    <div class="slds-grid slds-wrap slds-gutters">
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Dealer" placeholder="Dealer Name" value={changeRequestObj.dealerName} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Dealer Code" placeholder="Dealer Code" value={changeRequestObj.dealerCode} disabled="true"></lightning-input>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div  class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <lightning-record-picker if:true={ischangeVisible}
+                                                    object-api-name="Account"
+                                                    label="Ship to Address"
+                                                    placeholder="Enter Ship to Address"
+                                                    value={changeRequestObj.shipToAddressId} 
+                                                    matching-info={matchingInfo1} 
+                                                    display-info={displayInfo1} 
+                                                    filter={filter1} 
+                                                    onchange={handleShipToAddress} 
+                                                    required="true">
+                            </lightning-record-picker>
+                        </div>
+                    
+                         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                   
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <lightning-input if:true={isnewVisible} type="text" label="Name" placeholder="Name" value={changeRequestObj.name} onchange={handleNameChange}></lightning-input>
+                        </div>
+
+                        <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input if:true={isnewVisible} type="text" label="Name2" placeholder="Name2" value={changeRequestObj.name2} onchange={handleNameChange}></lightning-input>
+                        </div> -->
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div> 
+                    
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                    
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                         <lightning-textarea label="Shipping Address 1" placeholder="Enter Shipping Address 1" value={changeRequestObj.address1} onchange={handleAddress} required="true"></lightning-textarea>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <lightning-textarea label="Shipping Address 2" placeholder="Enter Shipping Address 2" value={changeRequestObj.address2} onchange={handleAddress}></lightning-textarea>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input if:true={isnewVisible} type="text" label="Contact Name" placeholder="Contact Name" value={changeRequestObj.contactName} onchange={handleContactChange}></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input if:true={isnewVisible} type="text" label="Phone No" placeholder="Phone No." value={changeRequestObj.phoneNo} onchange={handlePhoneChange}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <lightning-input if:true={isnewVisible} type="email" label="Email id" placeholder="Enter Email id"
+                                value={changeRequestObj.emailId} onchange={handleEmailChange} ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-record-picker object-api-name="YIN_Pincode__c" type="number" label="Pincode" placeholder="Pincode" value={changeRequestObj.pincodeId} matching-info={matchingInfo} 
+                          class="clear" display-info={displayInfo} filter={filter} onchange={handlePincode} required="true"></lightning-record-picker>
+                        </div>
+
+                        <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Location" placeholder="Location" value={changeRequestObj.location} onchange={handleLocationChange}></lightning-input>
+                        </div> -->
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input if:true={isnewVisible} type="text" label="GST Registraion" placeholder="GST Registraion"
+                                value={changeRequestObj.gstRegistration} onchange={handleGSTChange}></lightning-input>
+                        </div>
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                       
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Country" placeholder="Country" value={changeRequestObj.country} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="State" placeholder="State" value={changeRequestObj.state} disabled="true"></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="District" placeholder="District"
+                               value={changeRequestObj.district} disabled="true"></lightning-input>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input type="text" label="Sub District" placeholder="Sub District" disabled="true"
+                                value={changeRequestObj.subDistrict}></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            
+                                <lightning-input type="text" label="City" placeholder="City" value={changeRequestObj.city} disabled="true"></lightning-input>
+                        </div>
+
+                        
+                        <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div> -->
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
+                            <lightning-input if:true={isnewVisible} type="text" label="Website" placeholder="Website" value={changeRequestObj.website} onchange={handleWebsiteChange}></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12" style="margin-top:10px;">
+                            <div class="slds-form-element__control" style="display:inline-block;">
+                                <lightning-file-upload
+                                        label="Address Proof (GST Registration)"
+                                        name="fileUploader"
+                                        accept=" .pdf .jpg, .png, .jpeg"
+                                        record-id={recordId}
+                                        required="true"
+                                        onuploadfinished={handleUploadFinished}>
+                                    
+                                </lightning-file-upload>
+                                <div if:true={uploadedFileName} style="color: blue;">
+                                    <div>
+                                        <b> Uploaded File: {uploadedFileName}</b>
+                                        <lightning-icon icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small"></lightning-icon>
+                                    </div>
+                                </div>
+                                <div class="slds-text-title_caps slds-m-top_small" if:false={uploadedFileName}>
+                                    Please upload a file of type:.pdf, .jpg, .png, .jpeg
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+
+                    </div>
+
+                    <div style="margin: 0 auto; text-align:center; margin-top:20px; margin-bottom:10px;">
+                        <lightning-button label="Cancel" title="Non-primary action" onclick={handleClose}
+                            class="slds-m-left_x-small"></lightning-button>
+
+                        <lightning-button variant="brand" label="Submit" title="Primary action" onclick={handleSubmit}
+                            class="slds-m-left_x-small"></lightning-button>
+                    </div>
+                    </div>
+                   
+                <!--Shipping Address Section end here-->
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</template>
+<template if:true={aadharVerificationParam.epId}>
+<c-yin-enter-aadhaar-verification-cmp security-id={aadharVerificationParam.epId} email-id1={aadharVerificationParam.emailId} phone-no1={aadharVerificationParam.phoneNo} module={aadharVerificationParam.module} customer-code={aadharVerificationParam.erpCustomerCode}></c-yin-enter-aadhaar-verification-cmp>
+</template>
+</template>

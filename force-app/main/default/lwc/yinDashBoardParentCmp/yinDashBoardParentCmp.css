@@ -1,0 +1,13 @@
+.child-container {
+    display: flex;
+    flex-direction: column; /* Stacks components vertically */
+    gap: 20px; /* Optional: Adds space between components */
+}
+
+
+
+c-yin-contact-header, c-yin-badges, c-yin-d-b {
+    display: block;
+    width: 100%; /* Ensure each component takes full width */
+    margin-bottom: 20px; /* Adds space between components */
+}

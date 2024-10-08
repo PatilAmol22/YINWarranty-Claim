@@ -1,0 +1,15 @@
+<!--
+  @description       : Reusable Bar Chart Component.
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @last modified on  : 07-06-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <div class="slds-grid slds-wrap">
+        <canvas  class="barChart" lwc:dom="manual"></canvas>
+        <div if:false={isChartJsInitialized} class="slds-col--padded slds-size--1-of-1">
+            <lightning-spinner alternative-text="Loading" size="medium" variant="base"></lightning-spinner>
+        </div>
+    </div>
+</template>

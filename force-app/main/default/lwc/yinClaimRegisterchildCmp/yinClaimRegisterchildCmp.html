@@ -1,0 +1,291 @@
+<!--
+  @description       : 
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : 
+  @last modified on  : 23-07-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <div class="slds-is-relative">
+        <template if:true={showLoading}>
+            <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+    </template> 
+    
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+
+                    <div
+                        style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; border-top-left-radius:4px; border-top-right-radius:4px; font-size:16px; padding:5px;">
+                        <span style="font-size:14px; text-align:left;">{claimCombineChildObj.dealerName}</span>
+                        <span style="font-size:12px; float:right; text-align:right;">{claimCombineChildObj.dealerCode}</span>
+                    </div>
+
+                    <div style="margin: 15px 0;">
+
+                        <lightning-progress-indicator current-step="step2" variant="brand">
+                            <lightning-progress-step label="Step 0" value="step0" onstepblur={handleStepBlur}
+                                variant="brand">
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Step One" value="step1" onstepblur={handleStepBlur}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Step Two" value="step2" onstepblur={handleStepBlur}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Step Three" value="step3" onstepblur={handleStepBlur}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Step Four" value="step4" onstepblur={handleStepBlur}>
+                            </lightning-progress-step>
+
+                        </lightning-progress-indicator>
+
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                        <div style="margin-top:15px; border:1px solid #000; text-align:center; color:#000; font-weight:600; font-size:16px; padding:5px;">
+                         <span style="font-size:14px; text-align:left;">Step 2 : Tyre Information</span>
+                       </div>
+                     </div>
+
+
+                    <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Tyre Serial Image" required="true" name="fileUploader"
+                                accept={acceptedFormats} record-id={myRecordId}
+                                onuploadfinished={handleUploadFinished} disabled={claimCombineChildObj.isEditable}>
+                            </lightning-file-upload>
+                            <div if:true={claimCombineChildObj.uploadedFileName1} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {claimCombineChildObj.uploadedFileName1}</b>
+                                    <lightning-button-icon variant="bare" data-name="file1" icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small" disabled={claimCombineChildObj.isEditable}></lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={claimCombineChildObj.uploadedFileName1}>
+                               <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Defect Image Outside" required="true" name="fileUploader2"
+                                accept={acceptedFormats} record-id={myRecordId}
+                                onuploadfinished={handleUploadFinished} disabled={claimCombineChildObj.isEditable}>
+                            </lightning-file-upload>
+                            <div if:true={claimCombineChildObj.uploadedFileName2} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {claimCombineChildObj.uploadedFileName2}</b>
+                                    <lightning-button-icon variant="bare" data-name="file2" icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small"  disabled={claimCombineChildObj.isEditable}></lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={claimCombineChildObj.uploadedFileName2}>
+                                <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Defect Image Inside" required="true" name="fileUploader3"
+                                accept={acceptedFormats} record-id={myRecordId}
+                                onuploadfinished={handleUploadFinished} disabled={claimCombineChildObj.isEditable} >
+                            </lightning-file-upload>
+                            <div if:true={claimCombineChildObj.uploadedFileName3} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {claimCombineChildObj.uploadedFileName3}</b>
+                                    <lightning-button-icon variant="bare" data-name="file3" icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small" disabled={claimCombineChildObj.isEditable}></lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={claimCombineChildObj.uploadedFileName3}>
+                                <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Tread Depth Gauge" required="true" name="fileUploader4"
+                                accept={acceptedFormats} record-id={myRecordId}
+                                onuploadfinished={handleUploadFinished} disabled={claimCombineChildObj.isEditable} >
+                            </lightning-file-upload>
+                            <div if:true={claimCombineChildObj.uploadedFileName4} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {claimCombineChildObj.uploadedFileName4}</b>
+                                    <lightning-button-icon variant="bare" data-name="file4" icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small" disabled={claimCombineChildObj.isEditable}></lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={claimCombineChildObj.uploadedFileName4}>
+                                <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Side Wall" name="fileUploader6" required="true" accept={acceptedFormats}
+                                record-id={myRecordId}  onuploadfinished={handleUploadFinished} disabled={claimCombineChildObj.isEditable}>
+                            </lightning-file-upload>
+                            <div if:true={claimCombineChildObj.uploadedFileName6} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {claimCombineChildObj.uploadedFileName6}</b>
+                                    <lightning-button-icon variant="bare" data-name="file6" icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small"  disabled={claimCombineChildObj.isEditable}></lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={claimCombineChildObj.uploadedFileName6}>
+                                <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Odometer Reading" name="fileUploader5"
+                                accept={acceptedFormats} record-id={myRecordId}
+                                onuploadfinished={handleUploadFinished} disabled={claimCombineChildObj.isEditable} >
+                            </lightning-file-upload>
+                            <div if:true={claimCombineChildObj.uploadedFileName5} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {claimCombineChildObj.uploadedFileName5}</b>
+                                    <lightning-button-icon variant="bare" data-name="file5" icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small" disabled={claimCombineChildObj.isEditable}></lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={claimCombineChildObj.uploadedFileName5}>
+                                <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div>
+
+                        
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 25px;">
+                            <lightning-combobox
+                                name="Damage Condition"
+                                label="Damage Condition" 
+                                onchange={handleConditionChange}
+                                placeholder="Select damage condition"
+                                options={conditionOptions}
+                                value={claimCombineChildObj.damageCondition}
+                                required="true"
+                                read-only={claimCombineChildObj.isEditable}>
+                                </lightning-combobox>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12" style="margin-top: 25px;">
+                            <lightning-dual-listbox
+                                    name="Damage Cause" 
+                                    label="Damage Cause"
+                                    source-label="Available"
+                                    selected-label="Selected"
+                                    field-level-help="Select one or more Tyre damage causes."
+                                    options={causeOpts} 
+                                    onchange={handleCauseChange}
+                                    value={claimCombineChildObj.damageCause}
+                                    size="2"
+                                    required="true"
+                                    disabled={claimCombineChildObj.isEditable}
+                                    ></lightning-dual-listbox>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 25px;">
+                            <lightning-radio-group 
+                                name="Claim Policy"
+                                label="Claim Policy" 
+                                class="customRadioCls"
+                                onchange={handleclaimPolicyChange}
+                                options={claimPolicyOptions}
+                                value={claimCombineChildObj.claimPolicy}
+                                required="true"
+                                read-only={claimCombineChildObj.isEditable}>
+                            </lightning-radio-group>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12" style="margin-top: 15px;">
+                            <lightning-textarea read-only={claimCombineChildObj.isEditable}
+                             type="text" label="Nature of complaint" value={claimCombineChildObj.natureOfComplaint} 
+                            onchange={handleInputChange} required="true"></lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <!-- <div
+                                style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                                <span style="font-size:14px; text-align:left;">Nature of complaint</span>
+                            </div> -->
+                        </div>
+
+
+                        <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:25px;">
+                            <lightning-radio-group name="radioGroup" label="" class="customRadioCls" options={options3}
+                                value={claimCombineChildObj.customRadioGroup} type="radio" onchange={handleRadioChange}></lightning-radio-group>
+                        </div> -->
+
+                        <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Original Groove Depth" value={claimCombineChildObj.originalGrooveDepth} disabled="true" ></lightning-input>
+                        </div> -->
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input read-only={claimCombineChildObj.isEditable} type="text" label="Remaining Groove Depth" value={claimCombineChildObj.remainingGrooveDepth} onblur={handleRGDChange} required="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Wear %"  value={wearPercent} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input read-only={claimCombineChildObj.isEditable} type="text" label="Total Running Kms" value={claimCombineChildObj.totalRunningKms} onblur={handleInputChange} required="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <div
+                                style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                                <span style="font-size:14px; text-align:left;">Dealer Information</span>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Dealer Name" value={claimCombineChildObj.dealerName} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Dealer City" value={claimCombineChildObj.dealerCity} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Dealer State" value={claimCombineChildObj.dealerState} disabled="true"></lightning-input>
+                        </div>
+
+                        
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top: 15px;">
+                            <lightning-combobox type="text" label="Pickup Location"
+                             value={claimCombineChildObj.pickupLocation} 
+                             options={pickupOptions}
+                             onchange={handlepickupLocationChange}
+                             required="true"
+                             read-only={claimCombineChildObj.isEditable}></lightning-combobox>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top: 15px;">
+                            <lightning-textarea read-only={claimCombineChildObj.isEditable} type="text" label="Claim Remarks" value={claimCombineChildObj.claimRemarks} onchange={handleInputChange}></lightning-textarea>
+                        </div>
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <hr style="margin: 15px 0 10px;"></hr>
+                        </div>
+
+                        <div class="slds-size_6-of-12 slds-large-size_6-of-12"
+                            style="text-align:left; float:left; padding-left:15px;">
+                            <lightning-button label="Back" title="Back" onclick={handleClick}></lightning-button>
+                        </div>
+
+                        <div class="slds-size_6-of-12 slds-large-size_6-of-12"
+                            style="text-align:right; float:right; padding-right:15px;">
+                            <lightning-button label="Next" variant="brand" title="Next" onclick={handleClick} disabled={nextDisabled}></lightning-button>
+                        </div>
+
+                        <div style="clear:both;"></div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</template>

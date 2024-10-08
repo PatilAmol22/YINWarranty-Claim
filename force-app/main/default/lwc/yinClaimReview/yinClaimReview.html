@@ -1,0 +1,336 @@
+<!--
+  @description       : 
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @created date      : 30-09-2024
+  @last modified on  : 30-09-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+  Modifications Log
+  Ver   Date         Author                                      Modification
+  1.0   10-09-2024   Amol Patil/amol.patil@skinternational.com   Initial Version
+-->
+<template>
+    <div if:true={showSpinner} class="spinner">
+        <lightning-spinner alternative-text="Please Wait" size="large" variant="brand"></lightning-spinner>
+    </div>
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+
+                    <!-- <div
+                        style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; border-top-left-radius:4px; border-top-right-radius:4px; font-size:16px; padding:5px;">
+                        <span style="font-size:14px; text-align:left;">Claim Review Form</span>
+                    </div> -->
+
+                     <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                             <span style="font-size:14px; text-align:left;">Claim Details</span>
+                           </div>
+                         </div>
+
+                           <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                               <!-- <lightning-input type="text" label="Docket No." value={claimObj.docketNo} disabled="true"></lightning-input> -->
+                                <span style="font-weight: 600;">Docket No.</span><br/>
+                                <!-- <lightning-formatted-url style="font-weight:650" value={claimURL} label={claimObj.docketNo} target="_blank" ></lightning-formatted-url> -->
+                                <span style="font-weight:650"><a style="color: #1797c0;" class="slds-button" href={claimURL} target="_blank">{claimObj.docketNo}</a></span>
+                            </div>
+         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <!-- <lightning-input type="text" label="Warranty Reg. No" value={claimObj.warrantyNumber} disabled="true"></lightning-input> -->
+                                <span style="font-weight: 600;">Warranty Reg. No</span><br/>
+                                <!-- <lightning-formatted-url style="font-weight:650" value={warrantyURL} label={claimObj.warrantyNumber} target="_blank" ></lightning-formatted-url> -->
+                                <!-- <span style="font-weight:650"><a style="color: #1797c0;" class="slds-button" href={warrantyURL} target="_blank">{claimObj.warrantyNumber}</a></span> -->
+                                <span style="font-weight:650">
+                                <template if:true={warrantyURL}>
+                                    <a style="color: #1797c0;" class="slds-button" href={warrantyURL} target="_blank">{claimObj.warrantyNumber}</a>
+                                </template>
+                                <template if:false={warrantyURL}>
+                                    {claimObj.warrantyNumber}
+                                </template>
+                            </span>
+                            </div>
+         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                                <lightning-input type="Date" label="Date of Claim" value={claimObj.claimDate} disabled="true"></lightning-input>
+                            </div> 
+                         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="Date" label="Warranty Reg Date" value={claimObj.warrantyStartDate} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="Date" label="Warranty Valid Till" value={claimObj.warrantyEndDate} disabled="true"></lightning-input>
+                             </div>
+
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:38px;">
+                                <template if:true={condition.within7Days}>
+                                    <lightning-input type="checkbox" label="Registerd within 7 Days" checked={condition.within7Days} disabled="true"></lightning-input>
+                                </template>
+                                <template if:false={condition.within7Days}>
+                                    <lightning-input style="-webkit-text-fill-color: red;" type="checkbox" label="Registerd within 7 Days" checked={condition.within7Days} disabled="true"></lightning-input>
+                                </template>
+                             </div>
+
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Claim Dealer Name" value={claimObj.claimDealer} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Purchase Dealer Name" value={claimObj.purchaseDealer} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="C&amp;F Location" value={claimObj.cfLocation} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="State" value={claimObj.state} disabled="true"></lightning-input>
+                             </div>
+
+
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                                <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                                 <span style="font-size:14px; text-align:left;">Customer Details</span>
+                               </div>
+                             </div>
+             
+             
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Customer Name" value={claimObj.customerName} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Customer Phone No." value={claimObj.customerMobile} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Vehicle No" value={claimObj.vehicleNo} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Vehicle Maker" value={claimObj.companyName} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Vehicle Model" value={claimObj.modelName} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Total Running Km" value={claimObj.totalkm} disabled="true"></lightning-input>
+                             </div>
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Total Running Time" value={runningTime} disabled="true"></lightning-input>
+                             </div>
+
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-radio-group disabled={disableFields} onchange={handleOEChange} variant="label-inline" name="OE/Replacement" label="OE/Replacement" options={oeOptions} value={claimObj.oeReplacement} type="radio"></lightning-radio-group>
+                             </div>
+
+                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:20px;">
+                                <lightning-input type="checkbox" label="OTP Verified?" checked={claimObj.manualOtpVerified} disabled={disableOTP} onchange={handleOTPCheckbox}></lightning-input>
+                             </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                             <span style="font-size:14px; text-align:left;">Tyre Details</span>
+                           </div>
+                         </div>
+         
+         
+                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                            <lightning-input type="text" label="Tyre Size" value={tyreObj.tyreSize} disabled="true"></lightning-input>
+                            </div>
+         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Tyre Pattern" value={tyreObj.tyrePattern} disabled="true"></lightning-input>
+                            </div>
+         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                                <lightning-input type="text" label="Tyre Serial Number" value={tyreObj.tyreSerialNo} disabled={disableFields}></lightning-input>
+                            </div>
+         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                                <lightning-input type="text" label="Article No" value={tyreObj.productCode} disabled="true"></lightning-input>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                                <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                                 <span style="font-size:14px; text-align:left;">Damage Details</span>
+                               </div>
+                             </div>
+             
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="RGD" value={claimObj.remainingGrooveDepth} onblur={handleRGDChange} disabled={disableFields}></lightning-input>
+                            </div> 
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12" style="margin-top:15px;">
+                                <lightning-textarea name="Complaint Nature" disabled value={claimObj.natureOfComplaint} label="Complaint Nature" ></lightning-textarea>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <template if:true={condition.wear50}>
+                                    <lightning-input type="number" label="Wear %" value={claimObj.wear}  step="0.01" disabled="true"></lightning-input>
+                                </template>
+                                <template if:false={condition.wear50}>
+                                    <lightning-input style="-webkit-text-fill-color: red;" type="number" label="Wear %" value={claimObj.wear}  step="0.01" disabled="true"></lightning-input>
+                                </template>
+                                
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12" style="margin-top:15px;">
+                                <lightning-textarea name="Dealer Remarks" disabled value={claimObj.remark} label="Dealer Remarks" ></lightning-textarea>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <template if:true={condition.damageConditonMatch}>
+                                    <!-- <lightning-input type="text" label="Damage Condition" value={claimObj.damageCondition} disabled="true"></lightning-input> -->
+                                    <lightning-select name="Damage Condition" label="Damage Condition" value={claimObj.damageCondition} options={conditionOptions} onchange={handleConditionChange} disabled={disableFields} ></lightning-select>
+                                </template>
+                                <template if:false={condition.damageConditonMatch}>
+                                    <!-- <lightning-input style="-webkit-text-fill-color: red;" type="text" label="Damage Condition" value={claimObj.damageCondition} disabled="true"></lightning-input> -->
+                                    <lightning-select name="Damage Condition" label="Damage Condition" value={claimObj.damageCondition} options={conditionOptions} onchange={handleConditionChange} disabled={disableFields} ></lightning-select>
+                                </template>
+                                
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12" style="margin-top:15px;">
+                                <!-- <lightning-textarea name="Damage Cause" disabled value={causes} label="Damage Cause" ></lightning-textarea> -->
+                                <lightning-dual-listbox name="Damage Cause" label="Damage Cause" source-label="Available" selected-label="Selected" field-level-help="You can select multiple options" onchange={handleCausesChange} options={causeOptions}  value={causes} disabled={disableFields}></lightning-dual-listbox>
+                            </div>                       
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <!-- <lightning-input type="text" label="Previous Claim Againest Same Warranty " value={claimObj.previousClaimNo} disabled="true"></lightning-input> -->
+                                <span style="font-weight: 600;">Previous Claim Against Same Warranty</span><br/>
+                                <!-- <lightning-formatted-url style="font-weight:650" value={prevClaimURL} label={claimObj.previousClaimNo} target="_blank" ></lightning-formatted-url> -->
+                                <span style="font-weight:650"><a style="color: #1797c0;" class="slds-button" href={prevClaimURL} target="_blank">{claimObj.previousClaimNo}</a></span>
+                            </div>
+                            
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                                <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                                    <span style="font-size:14px; text-align:left;">Tyre Photos</span>
+                                </div>
+                            </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Tyre Serial Image</label>
+                           <div class="imgbox"><img class="responsive-image" src={serialUrl}
+                             onclick={handleImageClick}></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Damage Image Outside</label>
+                           <div class="imgbox"><img class="responsive-image" src={outUrl} 
+                           onclick={handleImageClick}></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Damage Image Inside</label>
+                           <div class="imgboxRight"><img class="responsive-image" src={inUrl} 
+                             onclick={handleImageClick}></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Depth Gauge</label>
+                           <div class="imgbox"><img class="responsive-image" src={dgUrl} 
+                             onclick={handleImageClick}></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Sidewall Photo</label>
+                           <div class="imgbox"><img class="responsive-image" src={extraUrl} 
+                             onclick={handleImageClick}></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Odometer Reading</label>
+                           <div class="imgboxRight"><img class="responsive-image" src={odoUrl} 
+                             onclick={handleImageClick}></div>
+                        </div>
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                             <span style="font-size:14px; text-align:left;">Conditions</span>
+                           </div>
+                         </div>
+
+                         <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin:15px;">
+                           <ul style="list-style-type: disc;">
+                            <template if:false={condition.within7Days}>
+                                <li class="liredtext" style="font-weight: bold;">Warranty registered after 7 days of invoice</li>
+                            </template>
+                            <template if:true={condition.wear15}>
+                                <li class="liredtext" style="font-weight: bold;">Wear % higher than 15% within 30 days of Reg</li>
+                            </template>
+                            <template if:true={condition.wear30}>
+                                <li class="liredtext" style="font-weight: bold;">Wear % higher than 30% within 90 days</li>
+                            </template>
+                            <template if:false={condition.mismatchTyreWithWarranty}>
+                                <li class="liredtext" style="font-weight: bold;">Mismatch in Tyre size/serial from warranty record</li>
+                            </template>
+                            <template if:false={condition.otpVerified}>
+                                <li class="liredtext" style="font-weight: bold;">OTP not verified</li>
+                            </template>
+                            <template if:false={condition.warrantyAvailable}>
+                                <li class="liredtext" style="font-weight: bold;">Warranty Record Not Available</li>
+                            </template>
+                            <template if:false={condition.wear50}>
+                                <li class="liredtext" style="font-weight: bold;">Wear % is more than 50 %</li>
+                            </template>
+                            
+                           </ul>
+
+                         </div>
+
+                         <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                             <span style="font-size:14px; text-align:left;">Judgement</span>
+                           </div>
+                         </div>
+
+                         <div  class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                            <lightning-combobox name="Claim Disposition" label="Claim Disposition" required="true" value={claimObj.status} placeholder="Select Status" data-id="claimDispo"
+                                options={filteredStatusOptions} onchange={handleStatusChange} disabled={disableAll}></lightning-combobox>
+                         </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-select name="Adjustment Type" label="Adjustment Type" value={claimObj.policy} options={policyOptions} onchange={handlePolicyChange} disabled={disableFields} ></lightning-select>
+                           </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="number" label="Revised Wear %" value={claimObj.revisedWear}  step="0.01" max="100" min="0" onblur={handleReviseChange} disabled={isDisable}></lightning-input>
+                            </div>
+
+                           <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top:15px;">
+                            <lightning-textarea type="text" label="Claim Remark" value={claimObj.reviewRemark} required="true" onblur={handleRemark} disabled={disableAll} data-id="claimRemark"></lightning-textarea>
+                           </div>
+
+                           <div if:true={isRejected} class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                            <lightning-input type="number" label="Invoice Amount with GST" value={claimObj.invoiceAmount} formatter="currency" step="0.01" min="0" disabled="true"></lightning-input>
+                           </div>
+                            <!-- Change added By Amol as if:true condition -->
+                           <div if:true={isRejected1} class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                            <lightning-input type="number" label="Chargable Amount (with Handling Charges)" value={claimObj.amount} formatter="currency" step="0.01" min="0" disabled="true"></lightning-input>
+                           </div>
+
+
+                        <!--<div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top: 15px;">
+                           <lightning-input type="checkbox" variant="destructive" label="I've read and accept the terms & Conditions" name="input2" checked required></lightning-input>
+                        </div> -->
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <hr style="margin: 15px 0 10px;"></hr>
+                        </div>
+
+                        <!--<div class="slds-size_6-of-12 slds-large-size_6-of-12"
+                            style="text-align:left; float:left; padding-left:15px;">
+                            <lightning-button label="Modify" title="Modify" onclick={handleClick}></lightning-button>
+                        </div>-->
+
+                        <div if:false={disableAll} class="slds-size_6-of-12 slds-large-size_12-of-12" style="text-align:center;  padding-right:15px;">
+                            <lightning-button label="Save" variant="brand" title="Save" onclick={handleSubmit} disabled={isSaveDisabled}></lightning-button>
+                        </div>
+
+                        <div style="clear:both;"></div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

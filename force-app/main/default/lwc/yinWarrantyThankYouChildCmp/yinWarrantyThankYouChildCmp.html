@@ -1,0 +1,44 @@
+<!--
+  @description       : Yin Warranty create child Cmp.
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @last modified on  : 10-04-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+
+                     <div class="slds-grid slds-wrap slds-gutters" style="padding: 25px;">
+
+                     <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="background: #f1f1f1; height:400px; border-radius:5px; padding-top:50px;">
+                       
+                        <div style="text-align:center;">
+                        <lightning-icon icon-name="action:approval" alternative-text="Approved" title="Approved"></lightning-icon>
+                        </div>
+
+                        <h2 style="text-align:center; font-weight:600; font-size:36px; padding:36px;">Thank You!</h2>
+
+                        <p style="font-size:12px; color:#333; text-align:center;">
+                            Dear <b>{warrantyScannerChildObj.customerName}</b>, Thank You for buying Yokohama Tyres.<br/>Your Purchase has been registered under the Yokohama protection program through <b>{warrantyScannerChildObj.dealerName}</b>
+                             T&amp;C <br/>Your warranty registration number is <b>{warrantyScannerChildObj.warrantyNo}</b><br/>
+                            <!-- Download your YPP Card <a href={cardLink} >Click here</a> -->
+
+
+                        </p>
+                    </div>
+                    <div style="margin-top: 30px; text-align: center; margin: 0 auto; padding-top:20px" >
+                        <lightning-button label="Close" variant="brand" onclick={handleClose}></lightning-button>
+                    </div> 
+                    </div>
+
+
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</template>

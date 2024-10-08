@@ -1,0 +1,302 @@
+<!--
+ * @description       : YIN Warranty Create.
+ * @author            : Amol Patil/amol.patil@skinternational.com
+ * @group             : SKI
+ * @last modified on  : 03-04-2024
+ * @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <div class="slds-is-relative">
+        <template if:true={showLoading}>
+            <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+    </template> 
+    <template if:true={showWarrantyParent}>
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+
+                    <div style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; border-top-left-radius:4px; border-top-right-radius:4px; font-size:16px; padding:5px;">
+                        <span style="font-size:14px; text-align:left;">Warranty</span>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                        <lightning-radio-group name="radioGroup"
+                                  label="Type of Registration"
+                                  class="customRadioCls"
+                                  options={options}
+                                  value={warrantyParentObj.type}
+                                  type="radio"
+                                  onchange={handleRadioChange}
+                                  disabled={isDisableWarranty}
+                                  ></lightning-radio-group>
+                          </div>
+        
+                                  <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12"></div>
+
+                                  <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                                    <hr style="margin: 15px 0 5px;"></hr>
+                                </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                        <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                         <span style="font-size:14px; text-align:left;">Customer Information</span>
+                       </div>
+                     </div>
+
+                    <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+                                    <!-- <template if:true={newPurchase}> -->
+
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" >
+                                <lightning-input read-only={warrantyParentObj.isEditable} type="search" placeholder="Enter Mobile Number" label="Search Customer" value={searchCustomer} onblur={handleSearchInput}></lightning-input>
+                                </div>
+        
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:20px;">
+                                <lightning-button disabled={warrantyParentObj.isEditable} class="newCustomer" label="Add New Customer" variant="brand" title="Add New Customer" onclick={openModal}
+                                ></lightning-button>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;"></div>
+
+                                    
+                                <!-- </template> -->
+
+                            </div>
+
+
+                    <!-- <template if:true={claimReplacement}>
+                        <div class="slds-grid slds-wrap slds-gutters" style="padding: 0px 10px 10px 10px;">
+                    
+                        </div>
+                    </template> -->
+
+
+                <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyParentObj.isEditable} type="text" label="Customer Name" value={warrantyParentObj.customerName} disabled="true"></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyParentObj.isEditable} type="text" label="Customer Phone Number" value={warrantyParentObj.customerMobile} disabled="true"></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                    <div style="margin-top:25px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                     <span style="font-size:14px; text-align:left;">Vehicle Details</span>
+                   </div>
+                 </div>
+               
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                    
+                    <lightning-record-picker object-api-name="YIN_Vehicle_Detail__c"
+                                                    label="Search Vehicle" 
+                                                    placeholder="Enter Vehicle Registration Number in Capital"
+                                                    value={warrantyParentObj.registrationNumber}
+                                                    matching-info={matchingInfo}
+                                                    display-info={displayInfo} 
+                                                    filter={filter} 
+                                                    class="clear"
+                                                    onchange={handleSearchVehicle} 
+                                                    disabled={disabledObj.vehicalDisabled}
+                                                
+                    ></lightning-record-picker>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:35px;">
+                    <lightning-button disabled={warrantyParentObj.isEditable} class="newVehicle" label="Add New Vehicle" variant="brand" title="Add New Vehicle" onclick={openModal2}
+                ></lightning-button>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:35px;">
+                </div>
+
+                 <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyParentObj.isEditable} type="text" label="Registration Number" value={warrantyParentObj.vehicleNo} disabled="true"></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyParentObj.isEditable} type="text" label="Company" value={warrantyParentObj.companyName} disabled="true"></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyParentObj.isEditable} type="text" label="Model" value={warrantyParentObj.modelName} disabled="true"></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyParentObj.isEditable} type="text" label="Registration Date" value={warrantyParentObj.registrationDate} disabled="true"></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyParentObj.isEditable} type="text" label="Monthly Running KM" value={warrantyParentObj.monthlyKm} onchange={handleInputChange} required="true"></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                    <hr style="margin: 15px 0 5px;"></hr>
+                </div>
+
+                <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 10px;">
+                   </div> -->
+
+                   <div  class="slds-col slds-size_1-of-1 slds-large-size_2-of-12" style="margin-top:33px; float: left; text-align: left;">
+                    <lightning-button  label={oTPButtons} variant="brand" title={oTPButtons} onclick={handleOTP} disabled={isOtpButtonDisabled}
+                    ></lightning-button>
+                    </div>
+
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12" style="margin-top: 11px;">
+                        <lightning-input onchange={handleInputChange} type="password" label="Enter OTP" placeholder="Enter OTP" value={warrantyParentObj.enterOTP} disabled={isEnterOTPDisabled} required="true"></lightning-input>
+                       </div>
+                
+
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12" style="margin-top:33px; text-align:right;">
+                    <lightning-button label="Next" variant="brand" title="Next" onclick={handleNextParent} disabled={disabledObj.isNextDisabled}
+                    ></lightning-button>
+                </div>
+                </div>
+
+              <!--Add customer modal start-->
+   
+<template if:true={bShowModal}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_large slds-fade-in-open" style="margin:0 auto; width:80%;">
+       <div class="slds-modal__container">
+          
+          <header class="slds-modal__header">
+             <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                <lightning-icon icon-name="utility:close"
+                   alternative-text="close"
+                   variant="inverse"
+                   size="small" ></lightning-icon>
+                <span class="slds-assistive-text">Close</span>
+             </button>
+             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add New Customer</h2>
+          </header>
+         
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <div if:true={showLoading} class="spinner-overlay">
+                <div class="exampleHolder">
+                    <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+                </div>
+              </div>
+              
+            <div class="slds-grid slds-gutters slds-wrap">
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
+                    <lightning-input type="text" label="Customer Name" value={customerObj.name} required="true" onchange={handleInputChange}></lightning-input>
+                   </div>
+
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
+                    <lightning-input type="text" label="Customer Phone Number" value={customerObj.mobile} required="true" onblur={handleInputChange}></lightning-input>
+                   </div> 
+
+                   <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top: 15px;">
+                    <lightning-textarea label="Address" value={customerObj.address} onchange={handleInputChange} ></lightning-textarea>
+                   </div> -->
+
+            </div>
+
+        </div>
+      
+          <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_brand" name="Add Customer" onclick={createNewRecord} disabled={disabledObj.disabledCustumorSave}>Save</button>
+             <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
+          </footer>
+       </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+ </template>
+
+ <!--Add customer modal end-->
+
+
+ <!--Add Vehicle modal start-->
+   
+<template if:true={bShowModal2}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_large slds-fade-in-open" style="margin:0 auto; width:80%;">
+       <div class="slds-modal__container">
+          
+          <header class="slds-modal__header">
+             <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal2}>
+                <lightning-icon icon-name="utility:close"
+                   alternative-text="close"
+                   variant="inverse"
+                   size="small" ></lightning-icon>
+                <span class="slds-assistive-text">Close</span>
+             </button>
+             <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Add New Vehicle</h2>
+          </header>
+         
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+            <div if:true={showLoading} class="spinner-overlay">
+                <div class="exampleHolder">
+                    <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+                </div>
+              </div>
+            <div class="slds-grid slds-gutters slds-wrap">
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top:15px;">
+                    <lightning-input  type="text" label="Registration Number" value={vehicleObj.registrationNumber} required="true" onchange={handleInputChange}></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top:15px;">
+                    <lightning-input type="date" date-style="short" label="Registration Date" value={vehicleObj.registrationDate}  onchange={handleInputChange}></lightning-input>
+                </div> 
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top:15px;">
+                    <lightning-input type="text" label="Vehicle Company" value={vehicleObj.companyName} required="true" onchange={handleInputChange}></lightning-input>
+                   </div>
+
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top:15px;">
+                    <lightning-input type="text" label="Vehicle Model" value={vehicleObj.modelName} required="true" onchange={handleInputChange}></lightning-input>
+                   </div> 
+
+                   <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top: 15px;">
+                    <lightning-input type="text" label="Odometer Reading" value={vehicleObj.odometerReading} onchange={handleInputChange}></lightning-input>
+                   </div> 
+
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top: 15px;">
+                    <lightning-input type="text" label="Chassis Number" value={vehicleObj.chassisNumber} onchange={handleInputChange}></lightning-input>
+                   </div> -->
+
+                  
+
+
+            </div>
+
+        </div>
+      
+          <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_brand" name="Add Vehicle" onclick={createNewRecord} disabled={disabledObj.disabledVehicleSave}>Save</button>
+             <button class="slds-button slds-button_neutral" onclick={closeModal2}>Cancel</button>
+          </footer>
+       </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+ </template>
+
+ <!--Add vehicle modal end-->
+
+
+                    </div>
+                </div>
+            </div>
+      </div>
+    </template>
+<!--Component Call Start hear-->  
+<template lwc:if={showWarrantyScannerChild}>
+    <c-yin-warranty-scanner-child-cmp onnext={handleNextChild} onback={handleBack} onsavedraft={handleSaveAsDraft}  warranty-scanner-child-obj={warrantyParentObj}></c-yin-warranty-scanner-child-cmp>
+</template>
+
+<template lwc:if={showWarrantyInvoiceChild}>
+        
+    <c-yin-warranty-invoice-child-cmp onmodify={handleModify} onsubmitdetails={handleSubmitDetails} warranty-child-obj={warrantyChildObj}></c-yin-warranty-invoice-child-cmp>
+</template> 
+
+<template lwc:if={showWarrantyThankYouChild}>
+    <c-yin-warranty-thank-you-child-cmp warranty-scanner-child-obj={warrantyScannerChildObj}></c-yin-warranty-thank-you-child-cmp>
+</template>
+
+    </div>
+</template>

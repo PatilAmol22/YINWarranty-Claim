@@ -1,0 +1,106 @@
+<!--
+  @description       : Demand Planning.
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @created date      : 04-10-2024
+  @last modified on  : 04-10-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+  Modifications Log
+  Ver   Date         Author                                      Modification
+  1.0   01-10-2024   Amol Patil/amol.patil@skinternational.com   Initial Version
+-->
+<template>
+  <div if:true={showSpinner} class="spinner" >
+    <lightning-spinner alternative-text="Please Wait" size="large" variant="brand"></lightning-spinner>
+  </div>
+  
+  <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+
+   <!-- modal start -->      
+  <template if:true={showModal}>      
+   <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+      <!-- modal header start -->
+         <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+               <lightning-icon icon-name="utility:close"
+                  alternative-text="close"
+                  variant="inverse"
+                  size="small" ></lightning-icon>
+               <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">DSM Wise Demand Planning Records</h2>
+         </header>
+         <div if:true={showSpinner} class="spinner" >
+            <lightning-spinner alternative-text="Please Wait" size="large" variant="brand"></lightning-spinner>
+          </div>
+         <!-- modal body start -->
+         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <div class="slds-p-horizontal_medium">
+               <lightning-combobox name="DSM" label="DSM" value="" placeholder="Select DSM" options={options} onchange={handleDSMChange} required ></lightning-combobox>
+            </div>
+         </div>
+
+         <!-- modal footer start-->
+         <footer class="slds-modal__footer">
+            <lightning-button variant="destructive" label="Download" title="Download" onclick={downloadCSV}
+                    class="slds-m-left_x-small"></lightning-button>
+            <lightning-button label="Cancel" title="Cancel" onclick={closeModal}
+                    class="slds-m-left_x-small"></lightning-button>
+            <!-- <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button> -->
+         </footer>
+      
+      </div>
+   </section>
+   <div class="slds-backdrop slds-backdrop_open"></div>
+   </template>
+   <!-- modal end -->
+      
+      <div class="slds-grid slds-gutters slds-align_absolute-center">
+        <div class="slds-col ">
+           <span> </span>
+        </div>
+        <div class="slds-col slds-medium-size_6-of-12  slds-large-size_7-of-12">
+           <div class="slds-box">
+              <div class="slds-section__title-action"
+                 style="background: #262626 !important; color:#fff; font-weight:600; border-top-left-radius:4px; border-bottom-left-radius:4px; border-top-right-radius:4px; border-bottom-right-radius:4px; font-size:18px; padding:5px;">
+                 <lightning-icon label="" icon-name="utility:upload" size="small"
+                    style="color:#fff!important;"></lightning-icon>
+                 <span style="margin-left:10px; font-size: 16px; font-weight: 500;">Upload Demand Planning</span>
+              </div>
+              <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+                 <div class="slds-grid" style="justify-content: center;">
+                    
+                    <div class="slds-col slds-large-size_5-of-12">
+                      <lightning-input label="File" name="File" onchange={handleFilesChange} type="file" accept=".csv,.CSV" required></lightning-input>
+                      <div class="error-message">{fileName}</div>
+                    </div>
+                 </div>
+              </div>
+              <div class="slds-form-element slds-p-top_small" align="center"
+                 style="margin-top: 15px; padding-top: 20px;border-top:1px solid #c9c9c9;">
+                 <lightning-button variant="destructive" label="Submit" title="Submit" onclick={handleSave}
+                    class="slds-m-left_x-small"></lightning-button>
+                 <lightning-button label="Cancel" title="Cancel" onclick={handleCancel}
+                    class="slds-m-left_x-small"></lightning-button>
+              </div>
+              <div class="slds-col slds-large-size_12-of-12" style="margin-top: 15px; border-top:1px solid #c9c9c9;">
+                 <P style="font-weight: 600; margin:10px 0;">Instructions</P>
+                 <ul style="list-style-type: disc;">
+                    <li>Demand Planning file should be in .csv format.</li>
+                    <li>Please avoid adding special character OR alphabets OR blank values in the file.</li>
+                    <li>Please avoid changing the column sequence.</li>
+                    <li>Please enter forecasting data only(Column O to R).</li>
+                    <!-- <li>Please enter YIN or YRC in supplier(Column S).</li> -->
+                 </ul>
+                 <P style="font-weight: 600; margin:10px 0;">Download template from <lightning-button variant="base" label="here" title="Download Template" onclick={handleTemplateDownload} class="slds-m-left_x-small"></lightning-button>
+                 </P>
+              </div>
+           </div>
+        </div>
+        <div class="slds-col">
+           <span></span>
+        </div>
+      </div>
+  </div>
+</template>

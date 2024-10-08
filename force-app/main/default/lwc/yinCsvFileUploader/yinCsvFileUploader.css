@@ -1,0 +1,10 @@
+.custom-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.custom-text {
+    color: black;
+}

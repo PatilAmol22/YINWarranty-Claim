@@ -1,0 +1,363 @@
+<apex:page controller="YINWarrantyCardController" renderAs="pdf" applyHtmlTag="false" showHeader="false" cache="true" readOnly="true">
+    <!-- Begin Default Content REMOVE THIS -->
+
+    <head>
+        <title>Yokohama India</title>
+        <style>
+            @page {
+              size:A4 portrait;
+              margin-top:-0.3cm;
+              margin-bottom:-1cm;
+              margin-left:-0.3cm;
+              margin-right:-0.3cm;
+            }
+    
+            body
+            {
+              font-family: helvetica,sans-serif;  
+              font-size:12px;
+              
+            }
+    
+            .page1{
+              width:100%;
+              margin-top:0px;
+              background:#f1f1f1;
+              height:1155px;
+            }
+            
+         
+            .page2{
+              margin-top:0px;
+              background:#000;
+              height:1155px;
+            }
+    
+            ol {
+              list-style: none;
+              counter-increment: start 0;
+            }
+    
+            li:before {
+              content: counter(start) ". ";
+              counter-increment: start;
+            }
+                
+            .both
+            {
+              float:clear;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="page2">
+            <apex:image value="{!$Resource.YINpage1}" width="800" height="1000" />
+            
+            <apex:image value="{!$Resource.YINfooter}" width="800" height="100" />
+        </div>
+
+        <div class="page1">
+            <!--<apex:image value="{!$Resource.header}" width="800" height="110" />-->
+            <table border="0" style="background:#000; padding:35px 20px 20px; width:100%;">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="float:left;">
+                                <apex:image value="{!$Resource.ykmLogoWhite}" width="260" height="66" />
+                            </div>
+                        </td>
+                        <td>
+                            <div style="float:right; text-align:right !important;">
+                                <span style="font-size:16px; font-weight:500; text-align:right; color:#fff;">YOKOHAMA INDIA PRIVATE LIMITED</span>
+                                <br/>
+                                <span style="font-size:16px; font-weight:500;  color:#fff;">(CIN U25190HR2007FTC081296)</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div>
+                <h1 style="text-align:center; font-size:20px; font-weight:500; margin-top:25px;">YOKOHAMA WARRANTY CERTIFICATE</h1>
+            </div>
+            <div style="padding:40px;">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td colspan="2" width="200">Warranty Reg. No.</td>
+                            <td colspan="2" width="200" style="background:#fff; border:1px solid #333; padding:2px;"><apex:outputText value="{!cardWrap.name}"/></td>
+                            <td colspan="2" width="200" style="padding-left:15px;">Warranty Reg. Date</td>
+                            <td colspan="2" width="200" style="background:#fff; border:1px solid #333; padding:2px;"><apex:outputText value="{!cardWrap.registrationDate}"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Invoice No.</td>
+                            <td colspan="2" style="background:#fff; border:1px solid #333; padding:2px;"><apex:outputText value="{!cardWrap.invoiceNo}"/></td>
+                            <td colspan="2" style="padding-left:15px;">Invoice Date</td>
+                            <td colspan="2" style="background:#fff; border:1px solid #333; padding:2px;"><apex:outputText value="{!cardWrap.invoiceDate}"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="padding:0px 40px;">
+                <div style="width:330px; height:200px; float:left; background:#fff; border:1px solid #333; padding:10px;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" style="text-align:center; font-size:14px;">CUSTOMER DETAILS</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" width="150" style="padding:5px 0;">Name</td>
+                                <td colspan="2" width="150" style="padding:5px 0;"><apex:outputText value="{!cardWrap.customerName}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px 0;">Contact No.</td>
+                                <td colspan="2" style="padding:5px 0;"><apex:outputText value="{!cardWrap.customeContactNo}"/></td>
+                            </tr>
+                            <!-- <tr>
+                                <td colspan="2" style="padding:5px 0;">City</td>
+                                <td colspan="2" style="padding:5px 0;"><apex:outputText value="{!cardWrap.customerCity}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px 0;">State</td>
+                                <td colspan="2" style="padding:5px 0;"><apex:outputText value="{!cardWrap.customerState}"/></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+                <div style="width:330px; height:200px;float:right; background:#fff; border:1px solid #333; padding:10px;">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" style="text-align:center; font-size:14px;">DEALER DETAILS</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" width="150" style="padding:5px 0;">Name</td>
+                                <td colspan="2" width="150" style="padding:5px 0;"><apex:outputText value="{!cardWrap.dealerName}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px 0;">Contact No.</td>
+                                <td colspan="2" style="padding:5px 0;"><apex:outputText value="{!cardWrap.dealerContactNo}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px 0;">Address</td>
+                                <td colspan="2" style="padding:5px 0;"><apex:outputText value="{!cardWrap.dealerAddress}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px 0;">City</td>
+                                <td colspan="2" style="padding:5px 0;"><apex:outputText value="{!cardWrap.dealerCity}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px 0;">State</td>
+                                <td colspan="2" style="padding:5px 0;"><apex:outputText value="{!cardWrap.dealerState}"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+            <div style="padding:20px 40px;">
+                <div style="background:#fff; padding:10px;">
+                    <table border="1" style="border-collapse:collapse;">
+                        <tbody>
+                            <tr>
+                                <td colspan="8" style="text-align:center; font-size:14px; border:none;">VEHICLE AND TYRE DETAILS</td>
+                            </tr>
+                            <tr>
+                                <td colspan="8" style="border:none;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" width="200" style="padding:5px; border-right:none;">Regsitration No.</td>
+                                <td colspan="2" width="200" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.vehicleNo}"/></td>
+                                <td colspan="2" width="200" style="padding:5px; border-right:none;">Maker:</td>
+                                <td colspan="2" width="200" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.maker}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px;">Odometer Reading:</td>
+                                <td colspan="2" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.odometerReading}"/></td>
+                                <td colspan="2" style="padding:5px;">Model:</td>
+                                <td colspan="2" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.model}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="8" style="border:none;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px;">Tyre Size:</td>
+                                <td colspan="2" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.tyreSize}"/></td>
+                                <td colspan="2" style="padding:5px;">Tyre Pattern:</td>
+                                <td colspan="2" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.tyrePattern}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px;">Tyre Serial No. 1:</td>
+                                <td colspan="2" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.serialNo1}"/></td>
+                                <td colspan="2" style="padding:5px;">Tyre Serial No. 2:</td>
+                                <td colspan="2" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.serialNo2}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px;">Tyre Serial No. 3:</td>
+                                <td colspan="2" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.serialNo3}"/></td>
+                                <td colspan="2" style="padding:5px;">Tyre Serial No. 4:</td>
+                                <td colspan="2" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.serialNo4}"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding:5px;">Tyre Serial No. 5:</td>
+                                <td colspan="6" style="padding:5px;"><apex:outputText value="{!cardWrap.vehicleTyre.serialNo5}"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="padding:20px 40px;">
+                <div style="background:#fff; padding:10px;">
+                    <table style="width:100%;">
+                        <tbody>
+                            <tr>
+                                <td colspan="8" style="text-align:center; font-size:14px;">CAR REGISTRATION NO. PLATE IMAGE</td>
+                            </tr>
+                            <tr>
+                                <td colspan="8" style="height:100px;">
+                                    <!--<apex:image height="100" width="695" url="/sfc/servlet.shepherd/version/download/{!cardWrap.contentVerId}"/>-->
+                                    <apex:outputPanel rendered="{!NOT(ISBLANK(cardWrap.contentVerId))}">
+                                    	<apex:image height="100" width="695" url="/sfc/servlet.shepherd/version/download/{!cardWrap.contentVerId}"/>
+                                    </apex:outputPanel>
+                                    <!-- Render a box if image is not available -->
+                                    <apex:outputPanel rendered="{!ISBLANK(cardWrap.contentVerId)}">
+                                        <div style="width:695px; height:100px; border:1px solid #ccc; display: flex; align-items: center; justify-content: center; text-align:center;">
+                                            <span style="vertical-align:middle;text-align:center;font-size:24px;">No Image Available</span>
+                                        </div>
+                                    </apex:outputPanel>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="padding:0px 40px;">
+                <p style="font-size:9px;">
+                    * For Details terms and condition, please refer Yokohama Lifetime Protection Program, attached with this certificate
+                    <br/> * It is considered that by registering this warranty customer consent on terms and condition of Yokohama Privacy Policy and Lifetime Protection Program
+                </p>
+                <p style="font-size:11px; text-align:center;">
+                    Corporate / Registered Office and Plant:
+                </p>
+                <p style="font-size:9px; text-align:center; line-height:15px;">
+                    Plot No. 1, Sector 4B, Bahadurgarh Industrial Estate, HSIIDC Bahadurgarh, District - Jhajjar, Haryana 124507
+                    <br/> Tel.: +91-1276-662200,Fax: +91-1276-662000
+                    <br/> Email: info@yokohama-india.com Website: www.yokohama-india.com</p>
+            </div>
+        </div>
+        
+        <div class="page2">
+            <table border="0" style="padding:35px 20px 20px; width:100%;">
+                <tbody>
+                    <tr>
+                        <td colspan="8">
+                            <div style="font-size:18px; font-weight:500; text-align:center; color:#e21e31; padding:20px 0;">
+                                LPP (LIFETIME PROTECTION PROGRAM)
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr style="color:#fff;" />
+            <div style="padding:20px 40px;">
+                <ol start="1">
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">
+                        ELIGIBILITY: This warranty applies to all passenger car tyres and SUV tyres (excluding RFT and AE30 tyres) sold only by authorized dealers of YOKOHAMA INDIA PVT LTD.</li>
+
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">WHAT TYRE IS WARRANTED (AND HOW LONG): YOKOHAMA passenger car tyres and SUV tyres are covered under the mentioned Program for the usage Lifetime* of tyres from the date of sales.</li>
+                </ol>
+                <div style="padding-left:30px;">
+                    <table border="1" style="width:94%; border:1px solid #fff;">
+                        <tbody>
+                            <tr>
+                                <th style="background:#e21e31; color:#fff; padding:5px; text-align:center;">Product Range</th>
+                                <th style="background:#e21e31; color:#fff; padding:5px; text-align:center;">Sales Period</th>
+                                <th style="background:#e21e31; color:#fff; padding:5px; text-align:center;">Sales Period</th>
+                                <th style="background:#e21e31; color:#fff; padding:5px; text-align:center;">Adjustment</th>
+                                <th style="background:#e21e31; color:#fff; padding:5px; text-align:center;">Requirement</th>
+                                <th style="background:#e21e31; color:#fff; padding:5px; text-align:center;">Validity Code</th>
+                                <th style="background:#e21e31; color:#fff; padding:5px; text-align:center;">Validity Period</th>
+                            </tr>
+                            <tr>
+                                <td style="color:#fff; padding:5px; text-align:center;">All patterns(except AE30, Run-flat and competition tyres)</td>
+                                <td style="color:#fff; padding:5px; text-align:center;">From 01st Jan, 2024 to 31st Dec, 2024</td>
+                                <td style="color:#fff; padding:5px; text-align:center;">All defects excluding defects mentioned below</td>
+                                <td style="color:#fff; padding:5px; text-align:center;">Pro-rata up to 50% tread wear</td>
+                                <td style="color:#fff; padding:5px; text-align:center;">Warranty registration (w.e.f. 1st Jan 2023)</td>
+                                <td style="color:#fff; padding:5px; text-align:center;">Serial Code (WWYY): All Pattern: 0121 onwards</td>
+                                <td style="color:#fff; padding:5px; text-align:center;">60 months from date of sales or up to 50% tread wear on prorata basis, whichever is earlier</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <span style="color:#fff; font-size:8px;">Usage *Lifetime of the tyres is considered as 60 months from date of sales</span>
+                </div>
+                <ol start="3">
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">Kindly note, all the claims under the LPP are subject to warranty registration done on Yokohama Mobile application by authorized dealers of YOKOHAMA INDIA PVT LTD within 7 days of sales of tyres. Customer would be provided with a unique
+                        warranty code on their registered phone number by SMS at the end of registration process. The unique code needs to be provided during the claim.</li>
+
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">
+                        Exclusions: Defects:
+                        <br/> Intentional damages (Multiple pin hole on sidewall / Cut with the help of sharp object).
+                        <br/> Tread cut Serviceable (Repairable Puncture on Tread).
+                        <br/> Uneven Tread wear, Spot Wear, Flat spots or any vehicle related defects.
+                        <br/> Bead Damage due to improper mounting / demounting practices.
+                        <br/> Damages caused due to improper maintenance of inflation pressure or under inflation.
+                        <br/> Repaired or Retreaded tyres.
+                        <br/> Improper application of tyres size or specification.
+                        <br/> Tyres put to any competitive usage, road racing.
+                    </li>
+
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">
+                        Lifetime Protection Program is applicable in India only on YOKOHAMA Tyres for all patterns except (AE30 and Run-Flat ) from 0121 serial code, manufactured or imported by YOKOHAMA INDIA PVT LTD only Tyres
+                    </li>
+
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">
+                        ADJUSTMENT BY TREAD WEAR PROPORTION:
+                        <br/> A. If YOKOHAMA tyres become unserviceable under specified conditions, it will be warranted on tread wear prorated basis.
+                        <br/> B. Tread wear would be calculated by the percentage of the groove depth between original depth and remaining serviceable groove depth i.e., the remaining serviceable tread depth is above 1.6 mm.
+                    </li>
+
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">
+                        This warranty isn’t transferable to another customer.
+                    </li>
+
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">
+                        EXCLUSION: All obligations or liabilities for loss of time, inconvenience, loss of use of vehicle or other incidental consequential damages are hereby excluded.
+                    </li>
+
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">
+                        YOKOHAMA INDIA PVT LTD should not be held liable for any statement, representation, commitment, deal, promise or agreement made by its dealers, employees, representatives or OEMs that in any way differs from the terms mentioned in this warranty.
+                    </li>
+
+                    <li style="font-size:13px; color:#fff; margin-bottom:15px;">
+                        YOKOHAMA INDIA PVT LTD should not be held liable for any statement, representation, commitment, deal, promise or agreement made by its dealers, employees, representatives or OEMs that in any way differs from the terms mentioned in this warranty.
+                    </li>
+                </ol>
+
+                <p style="font-size:8px; color:#fff; margin-top:80px; margin-left:45px;">
+                    Usage Lifetime* considered 5 years from date of purchase>
+                    <br/> #Excluding RFT and AE30 tyres
+                </p>
+                
+                <div style=" position:fixed; bottom:0; right:0;">
+                 <apex:image value="{!$Resource.YINbottom}" width="350" height="100" />
+               </div>
+                
+        
+            </div>
+            
+            
+        </div>
+        
+        
+    </body>
+</apex:page>

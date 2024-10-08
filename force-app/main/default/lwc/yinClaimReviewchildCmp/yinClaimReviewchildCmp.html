@@ -1,0 +1,201 @@
+<!--
+  @description       : 
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : 
+  @last modified on  : 05-08-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+
+                    <div
+                        style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; border-top-left-radius:4px; border-top-right-radius:4px; font-size:16px; padding:5px;">
+                        <span style="font-size:14px; text-align:left;">{objFromRegisterChild.dealerName}</span>
+                        <span style="font-size:12px; float:right; text-align:right;">{objFromRegisterChild.dealerCode}</span>
+                    </div>
+
+                    <div style="margin: 15px 0;">
+
+                        <lightning-progress-indicator current-step="step3" variant="brand">
+                            <lightning-progress-step label="Step 0" value="step0" onstepblur={handleStepBlur}
+                                variant="brand">
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Step One" value="step1" onstepblur={handleStepBlur}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Step Two" value="step2" onstepblur={handleStepBlur}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Step Three" value="step3" onstepblur={handleStepBlur}>
+                            </lightning-progress-step>
+                            <lightning-progress-step label="Step Four" value="step4" onstepblur={handleStepBlur}>
+                            </lightning-progress-step>
+
+                        </lightning-progress-indicator>
+
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                        <div style="margin-top:15px; border:1px solid #000; text-align:center; color:#000; font-weight:600; font-size:16px; padding:5px;">
+                         <span style="font-size:14px; text-align:left;">Step 3 : Claim Review</span>
+                       </div>
+                     </div>
+
+
+                    <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+
+                       <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                             <span style="font-size:14px; text-align:left;">Tyre Details</span>
+                           </div>
+                         </div>
+         
+                         <template if:true={WithWarranty}>
+                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                            <lightning-input type="text" label="Tyre Size" value={objFromRegisterChild.tyreSize} disabled="true"></lightning-input>
+                            </div>
+         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                <lightning-input type="text" label="Tyre Pattern" value={objFromRegisterChild.pattern} disabled="true"></lightning-input>
+                            </div>
+         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                                <lightning-input type="text" label="Serial Number" value={objFromRegisterChild.serialNumber} disabled="true"></lightning-input>
+                            </div>
+                           </template>
+
+                           <template if:true={WithOutWarranty}>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                               <lightning-input type="text" label="Tyre Size" value={objFromRegisterChild.tyreSize1} disabled="true"></lightning-input>
+                               </div>
+            
+                               <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
+                                   <lightning-input type="text" label="Tyre Pattern" value={objFromRegisterChild.pattern1} disabled="true"></lightning-input>
+                               </div>
+            
+                               <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                                   <lightning-input type="text" label="Serial Number" value={objFromRegisterChild.serialNumber1} disabled="true"></lightning-input>
+                               </div>
+                              </template>
+         
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                                <lightning-input type="text" label="Vehicle Maker" value={objFromRegisterChild.vehicleMake} disabled="true"></lightning-input>
+                            </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Vehicle Model" value={objFromRegisterChild.vehicleModel} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Registration Date" value={objFromRegisterChild.registrationDate} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Registration Number" value={objFromRegisterChild.registrationNumber} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Damage Condition" value={objFromRegisterChild.damageCondition} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-textarea  label="Damage Cause"  value={damageCause} disabled="true"></lightning-textarea>
+                        </div>
+                        
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Original Groove Depth" value={objFromRegisterChild.originalGrooveDepth} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Remaining Groove Depth" value={objFromRegisterChild.remainingGrooveDepth} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Wear %" value={wearPercent} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Claim Policy" value={objFromRegisterChild.claimPolicy} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12" style="margin-top: 15px;">
+                            <lightning-input type="text" label="Pickup Location" value={pickupValue} disabled="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top: 15px;">
+                            <lightning-textarea  label="Nature of complaint" value={objFromRegisterChild.natureOfComplaint} disabled="true"></lightning-textarea>
+                           </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top: 15px;">
+                            <lightning-textarea  label="Remarks" value={objFromRegisterChild.claimRemarks} disabled="true"></lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                             <span style="font-size:14px; text-align:left;">Tyre Photos</span>
+                           </div>
+                         </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Tyre Serial Image</label>
+                           <div class="imgbox" onmouseover={zoomIn} onmouseout={zoomOut}>
+                            <img src={image1} alt="" style="flex:2; max-height: 100%;"></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Defect Image Outside</label>
+                           <div class="imgbox" onmouseover={zoomIn} onmouseout={zoomOut} ><img src={image2} alt="" style="flex:2; max-height: 100%;"></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Defect Image Inside</label>
+                           <div  class="imgbox" onmouseover={zoomIn} onmouseout={zoomOut}><img src={image3} alt="" style="flex:2; max-height: 100%;"></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Tread Depth Gauge</label>
+                           <div class="imgbox" onmouseover={zoomIn} onmouseout={zoomOut}><img src={image4} alt="" style="flex:2; max-height: 100%;"></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Side Wall</label>
+                           <div class="imgbox" onmouseover={zoomIn} onmouseout={zoomOut}><img src={image6} alt="" style="flex:2; max-height: 100%;"></div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                            <label style="font-weight: 600;">Odometer Reading</label>
+                           <div class="imgbox" onmouseover={zoomIn} onmouseout={zoomOut}><img src={image5} alt="" style="flex:2; max-height: 100%;"></div>
+                        </div>
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <hr style="margin: 15px 0 10px;"></hr>
+                        </div>
+
+                        <div class="slds-size_6-of-12 slds-large-size_6-of-12"
+                            style="text-align:left; float:left; padding-left:15px;">
+                            <lightning-button label="Modify" title="Modify" onclick={handleClick}></lightning-button>
+                        </div>
+
+                        <div class="slds-size_6-of-12 slds-large-size_6-of-12"
+                            style="text-align:right; float:right; padding-right:15px;">
+                            <lightning-button label="Submit Details" variant="brand" title="Submit Details"
+                                onclick={handleClick} ></lightning-button>
+                        </div>
+
+                        <div style="clear:both;"></div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

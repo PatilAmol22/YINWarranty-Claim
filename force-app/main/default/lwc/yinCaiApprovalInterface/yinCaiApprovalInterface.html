@@ -1,0 +1,150 @@
+<template>
+   <div if:true={showLoading} class="spinner">
+      <lightning-spinner alternative-text="Please Wait" size="large" variant="brand"></lightning-spinner>
+   </div>
+   <lightning-card title={labels.Approval_Interface} icon-name="standard:approval">
+      
+      <div class="slds-box slds-theme_default" style="margin-bottom:10px;">
+         <div class="slds-grid slds-gutters slds-wrap slds-var-m-left_medium">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+               <lightning-combobox name="filter1" value={sObject} label={labels.Select_Module} style="font-weight:600;"
+                  options={optionSobject} onchange={handleChangeSobject}></lightning-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_9-of-12">
+               <c-yin-cai-child-comp filters={filters} onsearch={handleSearch}> </c-yin-cai-child-comp>
+            </div>
+         </div>
+      </div>
+      <lightning-card class="slds-align_absolute-center">
+         <div class="slds-grid slds-gutters slds-wrap  slds-var-m-left_xx-large">
+            <template for:each={options} for:item="item">
+               <fieldset key={item.value} style="display: block; float: left;">
+                  <div class="slds-form-element__control slds-m-left_xx-large">
+                     <span class="slds-radio">
+                     <input name="radiogroup" data-id={item.Id} id={item.value} type="radio" value={item.value} data-name={item.value} onchange={handleStageSelected}/>
+                     <label class="slds-radio__label" for={item.value}>
+                     <span class="slds-radio_faux"></span>
+                     <span class="slds-form-element__label">{item.label}</span>
+                     </label>
+                     </span>
+                  </div>
+               </fieldset>
+            </template>
+         </div>
+      </lightning-card>
+      <div class="slds-box slds-theme_default" style="margin-bottom:10px;">
+         <template if:true={showApprovalButton}>
+            <lightning-button variant="brand" label={labels.Approved_Rejected} title={labels.Approved_Rejected} onclick={openModal} disabled={enable_app_rej} class="slds-m-left_x-small"></lightning-button>
+         </template>
+         <!--table start-->
+         <div class="slds-grid slds-gutters slds-wrap slds-scrollable_x">
+            <div class="slds-var-p-around_medium lgc-bg">
+               <lightning-tree-grid
+                  class="slds-max-medium-table_stacked-horizontal"
+                  columns={gridColumns}
+                  onrowselection={setSelectedRows}
+                  onrowaction={handleEdit}
+                  data={gridDataPagination}
+                  key-field="Id"
+                  data-id="grid"
+                  selected-rows={selectedRows}
+                  ></lightning-tree-grid>
+            </div>
+         </div>
+         <!-- <div if:true={showLoading} role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+            <span class="slds-assistive-text">{labels.Loading}</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+         </div> -->
+         <!--table end-->
+      </div>
+      <c-yin-pagination-cmp page-size-value="10" tabledata={gridData}  onaction={handlePaginationAction}>
+         <div class="slds-float_right" style="margin-right: 20rem;" slot="pageNumber"><b class="pagenumber">{labels.Page} :</b></div>
+      </c-yin-pagination-cmp>
+      <template if:true={isModalOpen}>
+         <!-- Modal/Popup Box LWC starts here -->
+         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+               <!-- Modal/Popup Box LWC header here -->
+               <header class="slds-modal__header">
+                  <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title={labels.Close} onclick={closeModal}>
+                     <lightning-icon icon-name="utility:close"
+                        alternative-text={labels.Close}
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                     <span class="slds-assistive-text">{labels.Close}</span>
+                  </button>
+                  <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{labels.Approved_Rejected} : {count}</h2>
+               </header>
+               <!-- Modal/Popup Box LWC body starts here -->
+               <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                  <lightning-card title= {labels.You_are_about_to_Approve_Reject_the_selected_records} icon-name="standard:approval">
+                  </lightning-card>
+                  <div class="slds-form-element">
+                     <label class="slds-form-element__label" for="textarea-id-01">{labels.Comments}:</label>
+                     <div class="slds-form-element__control">
+                        <!-- <textarea id="textarea-id-01" placeholder="'Approve' , 'Reject'" class="slds-textarea" value={comment}></textarea> -->
+                        <lightning-textarea
+                           value={comment}
+                           onchange={handleChangeComment}
+                           class=”textAreaCSS”></lightning-textarea>
+                     </div>
+                  </div>
+                  <div class="slds-m-vertical_medium">
+                     <p>
+                        <lightning-button variant="success" name="Approve" label={labels.Approve} title={labels.Successful_action} onclick={handleconformClick} class="slds-m-left_x-small">
+                        </lightning-button>
+                        <lightning-button variant="destructive" name="Reject" label={labels.Reject} title={labels.Reject} onclick={handleconformClick} class="slds-m-left_x-small"></lightning-button>
+                        <span class="slds-text-heading_small">{clickedButtonLabel}</span>
+                     </p>
+                  </div>
+                  <b>
+                  </b></p>
+               </div>
+               <!-- Modal/Popup Box LWC footer starts here -->
+               <footer class="slds-modal__footer">
+                  <button class="slds-button slds-button_neutral" onclick={closeModal} title={labels.Cancel}>{labels.Cancel}</button>
+               </footer>
+            </div>
+         </section>
+         <div class="slds-backdrop slds-backdrop_open"></div>
+      </template>
+      <template if:true={isUpdateSubStatus}>
+         <!-- Modal/Popup Box LWC starts here -->
+         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style="height: 730px;">
+               <!-- Modal/Popup Box LWC header here -->
+               <header class="slds-modal__header">
+                  <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeChildModal}>
+                        <lightning-icon icon-name="utility:close"
+                           alternative-text="close"
+                           variant="inverse"
+                           size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                  </button>
+                <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">{modalHeader}</h2>
+               </header>
+               <!-- Modal/Popup Box LWC body starts here -->
+               <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+                  <!-- <c-yin-claim-review > </c-yin-claim-review> -->
+                  <lwc:component lwc:is={childCmpName} record-id={selectedRecordEditId} onclose={closeChildModal}></lwc:component> 
+                  
+               </div>
+               <!-- Modal/Popup Box LWC footer starts here -->
+               <footer class="slds-modal__footer">
+                  <button class="slds-button slds-button_neutral" onclick={closeChildModal} title="Cancel">Cancel</button>
+               </footer>
+            </div>
+         </section>
+         <div class="slds-backdrop slds-backdrop_open"></div>
+      </template>
+   </lightning-card>
+   <!--
+      <template if:true={isUpdateStatus}>
+      
+        <c-demand-generation record-id={demandId} onclose={handleClose}> 
+      
+        </c-demand-generation >
+      </template>
+      -->
+</template>
