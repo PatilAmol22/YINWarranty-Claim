@@ -2,8 +2,8 @@
  * @description       : 
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI
- * @created date      : 24-09-2024
- * @last modified on  : 24-09-2024
+ * @created date      : 11-10-2024
+ * @last modified on  : 11-10-2024
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
  * Modifications Log
  * Ver   Date         Author                                      Modification
@@ -22,6 +22,7 @@ import DAMAGE_CAUSES from '@salesforce/schema/YIN_Claim__c.Damage_Causes__c';
 import reviewClaim from '@salesforce/apex/YINClaimReviewController.reviewClaim';
 import processRecord from '@salesforce/apex/YINApprovalInterface.processRecord';
 import updateReview from '@salesforce/apex/YINClaimReviewController.updateReview';
+import saveImages from '@salesforce/apex/YINClaimReviewController.saveImages';
 
 export default class YinClaimReview extends LightningElement {
 
@@ -58,10 +59,28 @@ export default class YinClaimReview extends LightningElement {
 
     claimObjectInfo;
     causesFieldData;
+    //New Change By Amol 9thOCt
+    @track isModalOpen = false;
+    @track selectedImageType = '';
+    @track updatedImages = {serialImg : '',
+        outsideImg : '',
+        insideImg : '',
+        depthGaugeImg : '',
+        odometerImg :'',
+        extraImg : '',
+        serialFlag : false,
+        outFlag : false,
+        inFlag : false,
+        depthFlag : false,
+        odoFlag : false,
+        extraFlag : false
+       };
 
     connectedCallback(){
+        console.log('inside Cont:');
         this.init();
         this.handleValidation();
+        this.handleImageUpload();
 
     }
 
@@ -139,6 +158,7 @@ export default class YinClaimReview extends LightningElement {
             this.claimObj = JSON.parse(obj);
             this.tyreObj = this.claimObj.tyreWrap;
             this.imageObj = this.claimObj.images;
+            console.log('this.imageObj:', this.imageObj);
             this.condition = this.claimObj.conditions;
 
             this.serialUrl = this.baseUrl+this.imageObj.serialImg;
@@ -409,12 +429,46 @@ export default class YinClaimReview extends LightningElement {
     }
 
     updateRecord(){
+        // saveImages(
+        //     {
+        //         imagesJson: JSON.stringify(this.updatedImages),
+        //         claimId:this.recordId,
+        //     })
+        // .then(result1 => {
+        //     updateReview({
+        //         jsonString: JSON.stringify(this.claimObj)
+    
+        //     }).then(result => {
+        //         let obj = JSON.parse(result);
+        //         if(obj.status == 'success'){
+        //             this.showToast('Success', 'Successfully Saved', 'success');
+                    
+        //             this.resetComp();
+        //             this.dispatchEvent(new CustomEvent('close'));
+        //         }
+        //         else{
+        //             this.showToast('Error', obj.message, 'error');
+        //         }
+                
+        //         this.showSpinner = false;
+        //     }).catch(error => {
+        //         console.log('error updating claim record', error);
+        //         this.showToast('Error', 'Error' + error, 'error');
+        //         this.showSpinner = false;
+        //     })
+        // })
+        // .catch(error => {
+        //     console.log('error in saving images',error);
+        // })
+
         updateReview({
             jsonString: JSON.stringify(this.claimObj)
+
         }).then(result => {
             let obj = JSON.parse(result);
             if(obj.status == 'success'){
                 this.showToast('Success', 'Successfully Saved', 'success');
+                
                 this.resetComp();
                 this.dispatchEvent(new CustomEvent('close'));
             }
@@ -427,7 +481,7 @@ export default class YinClaimReview extends LightningElement {
             console.log('error updating claim record', error);
             this.showToast('Error', 'Error' + error, 'error');
             this.showSpinner = false;
-        })
+        })    
     }
 
     handleImageClick(event){
@@ -457,6 +511,106 @@ export default class YinClaimReview extends LightningElement {
         this.causes = [];
         this.runningTime = 0;
     }
+
+    // //New Change By Amol on 9thOct
+    handleUpdateImageClick(event) {
+        this.selectedImageType = event.currentTarget.dataset.id;
+        if(this.selectedImageType == 'serial' ){
+            this.updatedImages.serialFlag = true;
+        }
+        else if(this.selectedImageType == 'outside'){
+            this.updatedImages.outFlag = true;
+        }
+        else if(this.selectedImageType == 'inside'){
+            this.updatedImages.inFlag = true;
+        }
+        else if(this.selectedImageType == 'depthGuege'){
+            this.updatedImages.depthFlag = true;
+        }
+        else if(this.selectedImageType == 'odometer'){
+            this.updatedImages.odoFlag = true;
+        }
+        else if(this.selectedImageType == 'extra'){
+            this.updatedImages.extraFlag = true;
+        }
+
+        this.isModalOpen = true; 
+    }
+
+    handleCloseModal() {
+        this.isModalOpen = false;
+    }
+
+
+    async handleImageUpload(event) {
+        console.log('inside Upload :');
+        const uploadedFiles = event.detail.files;
+
+        console.log('uploadedFiles:', uploadedFiles);
+       
+        this.claimObj.images1 = this.claimObj.images1 || {}; 
+        if(this.updatedImages.serialFlag == true ){
+            this.updatedImages.serialImg = uploadedFiles[0].contentVersionId;
+            this.serialUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
+        }
+        else if(this.updatedImages.outFlag == true){
+            this.updatedImages.outsideImg = uploadedFiles[0].contentVersionId;
+            this.outUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
+        }
+        else if(this.updatedImages.inFlag  == true){
+            this.updatedImages.insideImg = uploadedFiles[0].contentVersionId;
+            this.inUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
+        }
+        else if(this.updatedImages.depthFlag == true){
+            this.updatedImages.depthGaugeImg = uploadedFiles[0].contentVersionId;
+            this.dgUrl= this.baseUrl+uploadedFiles[0].contentVersionId;
+        }
+        else if(this.updatedImages.odoFlag == true){
+            this.updatedImages.odometerImg = uploadedFiles[0].contentVersionId;
+            this.odoUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
+        }
+        else if(this.updatedImages.extraFlag == true){
+            this.updatedImages.extraImg = uploadedFiles[0].contentVersionId;
+            this.extraUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
+        }
+        
+        this.showToast('Success', 'Images uploaded successfully', 'success');
+        this.isModalOpen = false;
+        
+        //  saveImages(
+        //     {
+        //         imagesJson: JSON.stringify(this.updatedImages),
+        //         claimId:this.recordId,
+        //     })
+        // .then(result1 => {
+        //     console.log('inside Image save Method Success');
+        //     this.resetImageFlags();
+        //     })
+        // .catch(error => {
+        //     console.log('error in saving images',error);
+        // })
+        try {
+            await saveImages({
+                imagesJson: JSON.stringify(this.updatedImages),
+                claimId: this.recordId,
+            });
+            console.log('Image save method success');
+            this.resetImageFlags(); // Reset flags after successful save
+        } catch (error) {
+            console.error('Error in saving images', error);
+        }
+
+    }
+    
+    resetImageFlags() {
+        this.updatedImages.serialFlag = false;
+        this.updatedImages.outFlag = false;
+        this.updatedImages.inFlag = false;
+        this.updatedImages.depthFlag = false;
+        this.updatedImages.odoFlag = false;
+        this.updatedImages.extraFlag = false;
+    }
+    
     
 
     showToast(title, message, variant) {

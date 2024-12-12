@@ -4,6 +4,7 @@
     height: 250px !important;
     border-radius:5px;
     margin-top:5px;
+    margin-bottom: 5px;
     display: block;
     overflow-y: scroll !important;
     
@@ -15,6 +16,7 @@
     height:250px !important;
     border-radius:5px;
     margin-top:5px;
+    margin-bottom: 5px;
     display: block;
     overflow-y: scroll !important;
     
@@ -63,3 +65,4 @@ display:block;
     margin-top:5px;
     display: block;
 } */
+

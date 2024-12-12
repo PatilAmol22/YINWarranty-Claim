@@ -1,0 +1,39 @@
+<!--
+  @description       : To Call Claim Erp Service 
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @last modified on  : 01-04-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-is-relative">
+        <template if:true={showLoading}>
+            <div class="exampleHolder">
+                <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+            </div>
+        </template> 
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+ 
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+                  
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12"
+                        style="margin: 0 auto; margin-top: 15px;">
+                        <lightning-input type="text" label="Dispatch Remark" placeholder="Enter Remark" value={dispatchRemark} onchange={handleDispatchRemark} required="true" disabled={disabledRemark}></lightning-input>
+                    </div>
+                   
+                    <div style="margin: 0 auto; text-align:center; margin-top:20px; margin-bottom:10px;">
+                      <lightning-button variant="brand" label="Dispatch Claim"  onclick={dispatchClaim}
+                            class="slds-m-left_x-small" disabled={isDispatchDisabled}>
+                        </lightning-button>
+                        <!-- <lightning-button label="Cancel" title="Cancel" onclick={handleClose}
+                            class="slds-m-left_x-small"></lightning-button> -->
+                        
+                    </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ </div>
+ </template>

@@ -2,8 +2,8 @@
  * @description       : YIN Ledger Invoice Data-Table Component
  * @author            : Satish Tiware/satish.tiware@skinternational.com
  * @group             : SKI
- * @created date      : 11-09-2024
- * @last modified on  : 11-09-2024
+ * @created date      : 17-10-2024
+ * @last modified on  : 17-10-2024
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
  * Modifications Log
  * Ver   Date         Author                                            Modification
@@ -24,6 +24,7 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
 
     @track isModalOpen = false; 
     @track selectedDocNo = ''; 
+    @track selectedDoctype = '';
 
     @track columns =[
         {label : 'Posting Date', fieldName : 'PostingDate',sortable: "true"},
@@ -72,21 +73,21 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
   
         this.experienceUserProfiles = await getExperienceUserProfiles();
         this.user = await getCurrentUser();
-        console.log(' USer ',JSON.stringify(this.user));
+       // console.log(' USer ',JSON.stringify(this.user));
   
         this.IsCommunityUser = this.experienceUserProfiles?.includes(this.user?.Profile?.Name);
-        console.log('Is Community',this.IsCommunityUser);
+       // console.log('Is Community',this.IsCommunityUser);
         if(this.IsCommunityUser){
             this.recordId = await getExperienceUserAccount();
-            console.log('Account Id:', this.recordId);
+           // console.log('Account Id:', this.recordId);
         }
         getLedgerRec({dealerId:this.recordId})
             .then(data => {
                 
-        console.log('Data  ',data);
+       // console.log('Data  ',data);
   
         if (data) {
-            console.log('Data  ',data);
+           // console.log('Data  ',data);
             let tempData =[];
             // Assuming your date field is named 'createdDate'
             data.forEach((ele) => {
@@ -101,11 +102,12 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
                 ExDocNumber : ele.External_Document_Number__c,
                 PostingDate : ele.Posting_Date__c,
                 DocType : ele.Document_Type__c,  //Added By Amol Patil
-                isDisabled: ele.Document_Type__c != 'Invoice' //Added By Amol Patil
+                isDisabled: ele.Document_Type__c != 'Invoice' && ele.Document_Type__c !='Credit Memo' //Added By Amol Patil
+                
             };
            tempData.push(obj);
             });
-           
+          
             this.recordList = tempData;
            
             this.isLoading = false;
@@ -123,16 +125,15 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
             this.data = this.data.map(row => {
                 return {
                     ...row,
-                    isDisabled: row.DocType !== 'Invoice', 
-                    DocNoLink: row.DocType === 'Invoice' ? row.DocNo : '' 
+                    isDisabled: row.DocType != 'Invoice' && row.DocType !='Credit Memo', 
+                    DocNoLink: row.DocType == 'Invoice' || row.DocType =='Credit Memo' ? row.DocNo : '' 
                 };
             });
         
     }
 
     handleChangeAction(event){
- 
-        console.log('In handleChange');
+       // console.log('In handleChange');
         if(event.target.name == 'StartDate'){
             this.startDate= event.target.value;
             window.console.log('StartDate ##' + this.startDate);
@@ -189,7 +190,7 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
 
         if(this.startDate > this.endDate){
 
-            console.log('In error');
+           // console.log('In error');
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error',
@@ -224,7 +225,7 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
               ExDocNumber : ele.External_Document_Number__c,
               PostingDate : ele.Posting_Date__c,
               DocType : ele.Document_Type__c,
-              isDisabled: ele.Document_Type__c !== 'Invoice',
+              isDisabled: ele.Document_Type__c != 'Invoice' && ele.Document_Type__c !='Credit Memo',
               
            
          };
@@ -232,7 +233,7 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
           });
          
           this.recordList = tempData;
-          console.log('Data Size:',this.recordList);
+         // console.log('Data Size:',this.recordList);
           this.isLoading = false;
          
 
@@ -275,7 +276,7 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
 
     handlePaginationAction(event){
         setTimeout(() => {
-         console.log('curret Page ',event.detail.currentPage);
+        // console.log('curret Page ',event.detail.currentPage);
          this.paginatedData = event.detail.values;
       }, 200);
       }
@@ -286,9 +287,9 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
         
 
         if(this.startDate && this.endDate){  
-            console.log('In Download:');
-            console.log('StartDate-->:', this.startDate);
-            console.log('endDate-->:', this.endDate);
+           // console.log('In Download:');
+           // console.log('StartDate-->:', this.startDate);
+           // console.log('endDate-->:', this.endDate);
            let strStartDate = this.startDate;
            let strEndDate = this.endDate;
            generateCSV({dealerId:this.recordId,datestr1:String(strStartDate),datestr2:String(strEndDate),typestr:'Ledger'})
@@ -296,13 +297,13 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
                     let file = data;
     
                     file = JSON.parse(JSON.stringify(file));
-        console.log('File==>',file);
+       // console.log('File==>',file);
         this.ContentDocumentId = file;
-        console.log('ContentId==>',this.ContentDocumentId);
+       // console.log('ContentId==>',this.ContentDocumentId);
     
-        console.log('In Download');
+       // console.log('In Download');
            
-            console.log('File==>',file);
+           // console.log('File==>',file);
           let baseUrl = this.getBaseUrl();
           let downloadURL = baseUrl+'sfc/servlet.shepherd/version/download/'+file;
          
@@ -353,9 +354,9 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
 
     downloadData(){
         if(this.startDate && this.endDate){  
-        console.log('In Download:');
-        console.log('StartDate-->:', this.startDate);
-        console.log('endDate-->:', this.endDate);
+       // console.log('In Download:');
+       // console.log('StartDate-->:', this.startDate);
+       // console.log('endDate-->:', this.endDate);
        let strStartDate = this.startDate;
        let strEndDate = this.endDate;
         generatePdf({dealerId:this.recordId,datestr1:String(strStartDate),datestr2:String(strEndDate),typestr:'Ledger'})
@@ -363,13 +364,13 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
                 let file = data;
 
                 file = JSON.parse(JSON.stringify(file));
-    console.log('File==>',file);
+   // console.log('File==>',file);
     this.ContentDocumentId = file;
-    console.log('ContentId==>',this.ContentDocumentId);
+   // console.log('ContentId==>',this.ContentDocumentId);
 
-    console.log('In Download');
+   // console.log('In Download');
        
-        console.log('File==>',file);
+       // console.log('File==>',file);
       let baseUrl = this.getBaseUrl();
       let downloadURL = baseUrl+'sfc/servlet.shepherd/version/download/'+file;
      
@@ -409,18 +410,24 @@ export default class YinLedgerDataTableCmp  extends NavigationMixin(LightningEle
     }
 }
 
-//Added by Amol on 10 Sept 24
+//Added by Amol on 10 Sept 24 
 handleRowAction(event) {
     const actionName = event.detail.action.name;
         const row = event.detail.row;
 
         if (actionName == 'viewDoc' && row.DocType == 'Invoice') {
+           // console.log('inside Inv type row action:');
             this.selectedDocNo = row.DocNo;
+            this.selectedDoctype = row.DocType;
+            this.isModalOpen = true;
+        }else if(actionName == 'viewDoc' && row.DocType == 'Credit Memo'){
+           // console.log('inside CR note type row action:');
+            this.selectedDocNo = row.DocNo;
+            this.selectedDoctype = row.DocType;
             this.isModalOpen = true;
         }
-    
 }
-
+    
 closeModal() {
     this.isModalOpen = false;
 }

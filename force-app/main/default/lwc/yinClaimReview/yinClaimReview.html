@@ -2,8 +2,8 @@
   @description       : 
   @author            : Amol Patil/amol.patil@skinternational.com
   @group             : SKI
-  @created date      : 30-09-2024
-  @last modified on  : 30-09-2024
+  @created date      : 11-10-2024
+  @last modified on  : 11-10-2024
   @last modified by  : Amol Patil/amol.patil@skinternational.com
   Modifications Log
   Ver   Date         Author                                      Modification
@@ -203,38 +203,44 @@
 
                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
                             <label style="font-weight: 600;">Tyre Serial Image</label>
-                           <div class="imgbox"><img class="responsive-image" src={serialUrl}
+                           <div class="imgbox" ><img class="responsive-image" src={serialUrl}
                              onclick={handleImageClick}></div>
+                             <lightning-button variant="destructive" label="Update Image" onclick={handleUpdateImageClick} data-id="serial"></lightning-button>
                         </div>
 
                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
                             <label style="font-weight: 600;">Damage Image Outside</label>
                            <div class="imgbox"><img class="responsive-image" src={outUrl} 
                            onclick={handleImageClick}></div>
+                           <lightning-button variant="destructive" label="Update Image" onclick={handleUpdateImageClick} data-id="outside"></lightning-button>
                         </div>
 
                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
                             <label style="font-weight: 600;">Damage Image Inside</label>
                            <div class="imgboxRight"><img class="responsive-image" src={inUrl} 
                              onclick={handleImageClick}></div>
+                             <lightning-button variant="destructive" label="Update Image" onclick={handleUpdateImageClick} data-id="inside"></lightning-button>
                         </div>
 
                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
                             <label style="font-weight: 600;">Depth Gauge</label>
                            <div class="imgbox"><img class="responsive-image" src={dgUrl} 
                              onclick={handleImageClick}></div>
+                             <lightning-button variant="destructive" label="Update Image" onclick={handleUpdateImageClick} data-id="depthGuege"></lightning-button>
                         </div>
 
                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
                             <label style="font-weight: 600;">Sidewall Photo</label>
                            <div class="imgbox"><img class="responsive-image" src={extraUrl} 
                              onclick={handleImageClick}></div>
+                             <lightning-button variant="destructive" label="Update Image" onclick={handleUpdateImageClick} data-id="extra"></lightning-button>
                         </div>
 
                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
                             <label style="font-weight: 600;">Odometer Reading</label>
                            <div class="imgboxRight"><img class="responsive-image" src={odoUrl} 
                              onclick={handleImageClick}></div>
+                             <lightning-button variant="destructive" label="Update Image" onclick={handleUpdateImageClick} data-id="odometer"></lightning-button>
                         </div>
 
 
@@ -323,12 +329,41 @@
 
                         <div style="clear:both;"></div>
 
+                        <!-- File Upload Modal -->
+                        <template if:true={isModalOpen}>
+                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container" style="width: 50%; margin: 0 auto; top: 50%; transform: translateY(-50%);">
+                                    <!-- Modal Header -->
+                                    <header class="slds-modal__header">
+                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCloseModal}>
+                                            <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                                            <span class="slds-assistive-text">Close</span>
+                                        </button>
+                                        <h2 id="modal-heading" class="slds-text-heading_medium">Upload Image</h2>
+                                    </header>
+                        
+                                    <!-- Modal Body -->
+                                    <div class="slds-modal__content slds-p-around_medium" style="padding-left: 33%;">
+                                        <lightning-file-upload
+                                            label="Upload New Image"
+                                            record-id={recordId}
+                                            accept=".jpg,.jpeg,.png"
+                                            onuploadfinished={handleImageUpload}
+                                            multiple=false>
+                                        </lightning-file-upload>
+                                    </div>
+                        
+                                    <!-- Modal Footer -->
+                                    <footer class="slds-modal__footer">
+                                        <lightning-button variant="neutral" label="Cancel" onclick={handleCloseModal}></lightning-button>
+                                    </footer>
+                                </div>
+                            </section>
+                            <div class="slds-backdrop slds-backdrop_open"></div>
+                        </template>
+
 
                     </div>
-
-
-
-
                 </div>
             </div>
         </div>

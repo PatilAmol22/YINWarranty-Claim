@@ -1,0 +1,11 @@
+.slds-form-element__label {
+    font-weight: bold !important;
+    color: #000 !important;
+}
+
+  /* .slds-form-element__label {
+    font-weight: bold;
+    color: #0000 !important;
+    padding-bottom: 15px;
+    display: block;
+}   */

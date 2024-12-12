@@ -1,8 +1,8 @@
 /**
- * @description       : 
+ * @description       : To display Multiple Badges on the page that can be shown based on ERPCustomerCode.
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI
- * @last modified on  : 05-09-2024
+ * @last modified on  : 12-12-2024
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
 **/
 import { LightningElement,api,wire,track } from 'lwc';

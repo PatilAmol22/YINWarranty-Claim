@@ -1,0 +1,96 @@
+<!--
+  @description       : 
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : 
+  @last modified on  : 01-08-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+  <div class="slds-is-relative">
+    <template if:true={showLoading}>
+        <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+</template> 
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+         <div class="slds-grid slds-gutters slds-align_absolute-center">          
+
+            <div class="slds-col ">
+                <span> </span>
+            </div>            
+            
+
+            <div class="slds-col slds-medium-size_6-of-12  slds-large-size_5-of-12">
+                <div class="slds-box">
+
+                  <div class="slds-section__title-action" style="background:#262626; color:#fff; font-weight:600; border-top-left-radius:4px; border-bottom-left-radius:4px; border-top-right-radius:4px; border-bottom-right-radius:4px; font-size:18px; padding:5px;">
+                    <lightning-icon label="" icon-name="utility:currency" style="color:#fff!important;"></lightning-icon>
+                    <span style="margin-left:10px; font-size: 16px; font-weight: 500;">Security Deposit Decrease</span>
+                </div>
+
+                  <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+                    <div class="slds-grid slds-wrap">
+
+                      <div class="slds-col slds-large-size_12-of-12">
+                        <lightning-record-picker 
+                                                    object-api-name="Account"
+                                                    type="text" 
+                                                    label="Dealer Name/Code" 
+                                                    placeholder="Enter Dealer Name/Code"
+                                                    value={securityWrap.dealerId}
+                                                    matching-info={matchingInfo}
+                                                    display-info={displayInfo} 
+                                                    filter={filter} 
+                                                    class="clear"
+                                                    onchange={handleDealerChange} 
+                                                    required="true"
+                                                    >
+                        </lightning-record-picker>
+                      </div>
+                      
+                      <div class="slds-col slds-large-size_12-of-12" style="margin-top: 15px;">
+                        <lightning-input label="Current Security Deposit" disabled="true" type="text" value={securityWrap.availableSD}  name="Current Security Deposit"></lightning-input>
+                      </div>
+ 
+                      <div class="slds-col slds-large-size_12-of-12" style="margin-top: 15px;">
+                        <lightning-input label="Decrease Security Deposit Amount" type="text" value={securityWrap.decreaseAmount} required="true" name="Decrease Security Deposit Amount" onchange={handleInputChange} disabled={isDecreaseDisable}></lightning-input>
+                      </div>
+
+                      <div class="slds-col slds-large-size_12-of-12" style="margin-top: 15px;">
+                        <lightning-input label="Total Security Deposit" type="text" value={securityWrap.balanceAmount} disabled="true" name="Total Security Deposit"></lightning-input>
+                      </div>
+
+                      <div class="slds-col slds-large-size_12-of-12" style="margin-top: 15px;">
+                        <lightning-textarea name="Remark" label="Remark"  value={securityWrap.remarks} onchange={handleInputChange} disabled={isRemarkDisable}></lightning-textarea>
+                      </div>
+
+                      <div class="slds-col slds-large-size_12-of-12" style="margin-top: 15px;">
+                        <lightning-combobox
+                                name="progress"
+                                label="Status"
+                                value={securityWrap.status}
+                                placeholder="Select Status"
+                                options={statusOption}
+                                onchange={handlestatusChange}
+                                disabled
+                                >
+                        </lightning-combobox>
+                      </div>
+
+                    </div>
+                  </div>
+
+
+                  <div class="slds-form-element slds-p-top_small" align="center" style="margin-top: 15px; padding-top: 20px;border-top:1px solid #c9c9c9;">
+                    <lightning-button variant="destructive" label="Submit" title="Destructive action" onclick={handleSubmit} disabled={isSubmitDisable} class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button label="Cancel"  onclick={handleClose} class="slds-m-left_x-small"></lightning-button>
+                  </div>
+                  <!-- title="Non-primary action" -->
+                </div>
+            </div>
+            <div class="slds-col">
+                <span></span>
+            </div>
+        </div> 
+
+    </div>
+  </div>
+</template>

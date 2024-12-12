@@ -2,7 +2,7 @@
   @description       : Email,Phone And Address Change Request.
   @author            : Amol Patil/amol.patil@skinternational.com
   @group             : SkI 
-  @last modified on  : 02-04-2024
+  @last modified on  : 12-11-2024
   @last modified by  : Amol Patil/amol.patil@skinternational.com
 -->
 <template>
@@ -51,6 +51,22 @@
                     <div if:true={valueSelected2} class="slds-col slds-size_1-of-1 slds-large-size_10-of-12"
                         style="margin: 0 auto; margin-top: 15px;">
                         <lightning-input type="text" label="Phone" placeholder="Enter New Mobile Number" value={changeRequestObj.phoneNo} onchange={handlePhoneChange} required="true"></lightning-input>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
+                    <div if:true={valueSelected5} class="slds-col slds-size_1-of-1 slds-large-size_10-of-12"
+                        style="margin: 0 auto; margin-top: 15px;">
+                        <lightning-input type="text" label="Secondary Phone" placeholder="Enter New Mobile Number" value={changeRequestObj.phoneNo1} onchange={handlePhone1Change} required="true"></lightning-input>
+                    </div>
+
+                    <div if:true={showButtons1} style="margin: 0 auto; text-align:center; margin-top:20px; margin-bottom:10px;">
+                        <lightning-button label="Cancel" title="Non-primary action" onclick={handleClose}
+                            class="slds-m-left_x-small"></lightning-button>
+
+                        <lightning-button variant="brand" label="Submit" title="Primary action" onclick={handleSubmit}
+                            class="slds-m-left_x-small"></lightning-button>
                     </div>
                     <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
 
@@ -289,7 +305,6 @@
                             <lightning-record-picker object-api-name="YIN_Pincode__c" type="number" label="Pincode" placeholder="Pincode" value={changeRequestObj.pincodeId} matching-info={matchingInfo} 
                           class="clear" display-info={displayInfo} filter={filter} onchange={handlePincode} required="true"></lightning-record-picker>
                         </div>
-
                         <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_5-of-12" style="margin-top:10px;">
                             <lightning-input type="text" label="Location" placeholder="Location" value={changeRequestObj.location} onchange={handleLocationChange}></lightning-input>
                         </div> -->

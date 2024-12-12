@@ -1,0 +1,248 @@
+<!--
+  @description       : Create Warranty Invoice child cmp.
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @last modified on  : 05-04-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+    <div class="slds-is-relative">
+        <template if:true={showLoading}>
+            <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+    </template> 
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+
+                    <div style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; border-top-left-radius:4px; border-top-right-radius:4px; font-size:16px; padding:5px;">
+                        <span style="font-size:14px; text-align:left;">Warranty Invoice</span>
+                    </div>
+
+                    <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                           <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                            <span style="font-size:14px; text-align:left;">Add Photo's</span>
+                          </div>
+                        </div>
+
+                         <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Invoice Photo"
+                                                    accept={acceptedFormats} 
+                                                    name="fileUploader2"
+                                                    onuploadfinished={handleUploadFinished}
+                                                    record-id={myRecordId}
+                                                    required="true"
+                                                    disabled={warrantyChildObj.isEditable}>
+                            </lightning-file-upload>
+                            <!-- <button style="flex:3; margin-top:-120px; margin-left:110px;" variant="base" class="slds-button slds-button_icon" title="View Sample Image" onclick={openimgPopup1}>
+                                <lightning-icon icon-name="utility:image" size="x-small" ></lightning-icon>
+                            </button> -->
+                            <div if:true={images.invoiceImgName} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {images.invoiceImgName}</b>
+                                    <lightning-button-icon variant="bare" data-name="file2" 
+                                                            icon-name="utility:close" size="x-small" 
+                                                            alternative-text="Remove" title="Remove" 
+                                                            onclick={handleRemoveAttachment} class="slds-m-left_x-small" 
+                                                            disabled={warrantyChildObj.isEditable}>
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={images.invoiceImgName}>
+                               <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div> 
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
+                             <lightning-file-upload label="Vehicle Number Plate"
+                                                    accept={acceptedFormats} 
+                                                    name="fileUploader1"
+                                                    onuploadfinished={handleUploadFinished} 
+                                                    record-id={myRecordId}
+                                                    
+                                                    disabled={warrantyChildObj.isEditable}>
+                            </lightning-file-upload>
+                            <!-- <button style="flex:3; margin-top:-120px; margin-left:150px;" variant="base" class="slds-button slds-button_icon" title="View Sample Image" onclick={openimgPopup2}>
+                                <lightning-icon icon-name="utility:image" size="x-small" ></lightning-icon>
+                            </button> -->
+                            <div if:true={images.noPlateImgName} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {images.noPlateImgName}</b>
+                                    <lightning-button-icon variant="bare" data-name="file1" 
+                                                            icon-name="utility:close" size="x-small" 
+                                                            alternative-text="Remove" title="Remove" 
+                                                            onclick={handleRemoveAttachment} class="slds-m-left_x-small" 
+                                                            disabled={warrantyChildObj.isEditable}
+                                                            >
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={images.noPlateImgName}>
+                               <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                            
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Odometer Reading"
+                                                    accept={acceptedFormats} 
+                                                    name="fileUploader3"
+                                                    onuploadfinished={handleUploadFinished} 
+                                                    record-id={myRecordId}
+                                                    disabled={warrantyChildObj.isEditable}>
+                            </lightning-file-upload>
+                            <!-- <button style="flex:3; margin-top:-120px; margin-left:135px;" variant="base" class="slds-button slds-button_icon" title="View Sample Image" onclick={openimgPopup3}>
+                                <lightning-icon icon-name="utility:image" size="x-small" ></lightning-icon>
+                            </button> -->
+                            <div if:true={images.odometerImgName} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {images.odometerImgName}</b>
+                                    <lightning-button-icon variant="bare" data-name="file3" 
+                                                            icon-name="utility:close" size="x-small" 
+                                                            alternative-text="Remove" title="Remove" 
+                                                            onclick={handleRemoveAttachment} class="slds-m-left_x-small" 
+                                                            disabled={warrantyChildObj.isEditable}
+                                                            >
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={images.odometerImgName}>
+                               <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
+                            <lightning-file-upload label="Additional Image"
+                                                    accept={acceptedFormats} 
+                                                    name="fileUploader4"
+                                                    onuploadfinished={handleUploadFinished} 
+                                                    record-id={myRecordId}
+                                                    disabled={warrantyChildObj.isEditable}>
+                            </lightning-file-upload>
+                            <!-- <button style="flex:3; margin-top:-120px; margin-left:125px;" variant="distructive" class="slds-button slds-button_icon" title="View Sample Image" onclick={openimgPopup4}>
+                                <lightning-icon icon-name="utility:image" size="x-small" ></lightning-icon>
+                            </button> -->
+                            <div if:true={images.extraImgName} style="color: blue;">
+                                <div>
+                                    <b> Uploaded File: {images.extraImgName}</b>
+                                    <lightning-button-icon variant="bare" data-name="file4" 
+                                                            icon-name="utility:close" size="x-small" 
+                                                            alternative-text="Remove" title="Remove" 
+                                                            onclick={handleRemoveAttachment} class="slds-m-left_x-small" 
+                                                            disabled={warrantyChildObj.isEditable}
+                                                            >
+                                    </lightning-button-icon>
+                                </div>
+                            </div>
+                            <div class="slds-text-title_caps slds-m-top_small" if:false={images.extraImgName}>
+                               <b> Please upload a file of type:.jpg, .png, .jpeg</b>
+                            </div>
+                        </div>   
+                </div>
+
+
+                <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                   <div style="margin-top:15px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                    <span style="font-size:14px; text-align:left;">Invoice Details</span>
+                  </div>
+                </div>
+               
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyChildObj.isEditable} type="text" label="Invoice Number" value={warrantyChildObj.invoiceNumber} onchange={handleInputChange} required="true"></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyChildObj.isEditable} date-style="short" type="date" label="Invoice Date"  value={warrantyChildObj.invoiceDate} onchange={handleInputChange} required="true"></lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input read-only={warrantyChildObj.isEditable} type="number" label="Invoice Amount" value={warrantyChildObj.invoiceAmount} onchange={handleInputChange} required="true"></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input type="number" label="Tyre Quantity" value={warrantyChildObj.tyreQuantity}  required="true" disabled="true"></lightning-input>
+                </div>
+
+                <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                    <lightning-input type="number" label="Enter OTP" ></lightning-input>
+                </div> -->
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top: 15px; display:flex;">
+                    <lightning-input type="checkbox" variant= "label-hidden"
+                    
+                     name="input2" checked={warrantyChildObj.isCheckboxChecked}
+                     onchange={handleCheckboxChange} required  ></lightning-input>
+                     <p >I've read and accept the </p><lightning-button style="flex:3; margin-top:-4px; margin-left:5px;" variant="base" label="Terms & Conditions" onclick={openTermsAndConditions}></lightning-button>
+                 </div>  
+                 <!-- label="I've read and accept the Terms & Conditions" -->
+                
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                    <hr style="margin: 15px 0 5px;"></hr>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top:10px; text-align:left;">
+                    <lightning-button label="Modify" title="Modify" onclick={handleClick} 
+                ></lightning-button>
+                </div>
+
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12" style="margin-top:10px; text-align:right;">
+                    <lightning-button label="Submit Details"
+                                      variant="brand" 
+                                      title="Submit Details" 
+                                      onclick={handleClick}
+                                      disabled={submitDisabled} 
+                    ></lightning-button>
+                </div>
+                
+                </div>
+                    </div>
+                </div>
+                <template if:true={isTermsModalOpen}>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-modal_large slds-fade-in-open" style="margin:0 auto; width:80%;">
+                    <div class="slds-modal__container">
+                       
+                       <header class="slds-modal__header">
+                          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeTermsModal}>
+                             <lightning-icon icon-name="utility:close"
+                                alternative-text="close"
+                                variant="inverse"
+                                size="small" ></lightning-icon>
+                             <span class="slds-assistive-text">Close</span>
+                          </button>
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Terms & Conditions</h2>
+                            </header>
+                            
+                            
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <li>All orders booked by the Company are subject to these conditions of sale and all purchasers/buyers are deemed to have signified their acceptance to these conditions in addition to the other commercial policies of the Company while placing an order.</li>
+                            <li>It will be optional to the Company to cancel in whole or in part any order at any time even though the Company has accepted it. 3.Price, discount and terms are subject to change without notice and Company reserve its rights to decline or accept any order.</li>
+                            <li>The Purchaser shall ensure to make payment against the Invoices within 30 days from the date of Invoice. The company reserves the Right to charge interest @ 18% Per annum (or such other rates of int. as may be determined by co. from time to time) in case of delayed payments.</li>
+                            <li>The Purchaser shall be solely responsible for all compliances with respect to Goods and Service tax and the company shall not be responsible if any liability arises on the purchaser for any reason whatsoever.</li>
+                            <li>Orders will be executed at the price, discount and terms prevailing on the date of dispatch whether or not payment in part or in full has been made. Goods once sent according to order will not be taken back except by the consumer making special requests and arrangement with the Company and the purchaser has received the Company's written permission signed by a duly authorized official to return the goods. In such case buyer must prepaid the freight charges and other charges to the Company.</li>
+                            <li>All levies of the central government/state government of local authority shall be payable extra by the purchaser. Where any declaration / form provided by the purchaser for the purpose of exemption of such levies is rejected by the concerned authority for any reason whatsoever, the purchaser shall be liable to pay all such levies along with consequential damages etc.</li>
+                            <li>Every efforts have been made by the Company to secure the highest possible standard of excellence of both material and workmanship and the Company takes no representation or guarantee/warranty whatsoever in respect of any products sold or supplied by the Company and all conditions and warranties whatsoever, whether statutory or otherwise are hereby expressly excluded. The Company shall not be liable for any consequential loss/injury/claim whatsoever arising out of the use of any product of the Company. Purchaser cannot extend scope of warranty incase of resale.</li>
+                            <li>Without prejudice to the generality of Condition No. 6, Company reserves the right to consider claim brought to the Company in respect of a defective product as per the "Company limited warranty policy" of the Company at its absolute discretion. In all such cases the person returning the goods must prepay freight. Material should lie properly verified with the Invoice before accepting delivery from the transport carriers. All claims for goods lost or damaged or in transit must be made upon the carriers. The Company does not accept responsibility for goods after they have left the Company's premises.</li> 
+                            <li>Alleged defective goods submitted under claim will be received for examination as per the "Company limited warranty policy" of the Company and on the understanding that, if any, award/claim is passed should get acceptance within 21 days from the date of notification thereof. In the absence of such acceptance Company reserve its right to withdraw the award and to destroy/return the said goods at the cost of the claimant.</li> 
+                            <li>The Company neither assume nor accepts any legal responsibility from any damages to persons or property, which may arise from failure of any of its products.</li>
+                            <li>In the event of purchaser failing to take delivery of goods ordered by them, the Company may in addition to its other legal remedies recall or deal with the goods at its absolute discretion. In such cases purchasers will be liable to reimburse the Company all charges, costs and expenses incurred in dispatching and reselling the goods including actual Bank/VPP/Freight, handling and demurrage charges. Company's statement of claim will be final and binding on purchasers.</li> 
+                            <li>No arrangement or contract is binding on the Company unless in writing and signed by duly authorized officer of the Company.</li>
+                            <li>The Company will, make every reasonable effort to effect prompt delivery of the goods, however, it shall not be liable for any delay in delivery due to unforeseen circumstances or the circumstances beyond its control.</li>
+                            <li>The purchaser undertakes not to trade the goods sold under this invoice without the written permission of the Company except when fitted to vehicles or machines.</li>
+                            <li>All dispute arising out of, or in connection with this invoice shall, fall within the Jurisdiction of the Courts at Delhi ONLY to the exclusion of all other Courts.</li>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_neutral" onclick={closeTermsModal} >Close</button>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </template>
+            </div>
+      </div>
+      </div>
+      
+</template>

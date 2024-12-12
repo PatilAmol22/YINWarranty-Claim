@@ -2,7 +2,7 @@
   @description       : Email,Phone And Address Change Request.
   @author            : Amol Patil/amol.patil@skinternational.com
   @group             : SkI 
-  @last modified on  : 05-02-2024
+  @last modified on  : 12-11-2024
   @last modified by  : Amol Patil/amol.patil@skinternational.com
 **/
 import { LightningElement,track,api,wire} from 'lwc';
@@ -22,7 +22,9 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
     valueSelected2 = false;
     valueSelected3 = false;
     valueSelected4 = false;
+    valueSelected5 = false;
     showButtons = true;
+    showButtons1 = false;
     @track ShowLoding = true;
     value5 = 'email';
     @track changeRequestObj = {};
@@ -53,6 +55,7 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
         return [
             { label: 'Email', value: 'email' },
             { label: 'Phone', value: 'phone' },
+            { label: 'Secondary Phone',value: 'phone1'},
             { label: 'Change Billing Address', value: 'changeBilingaddress'},
             { label: 'Change Shipping Address',value: 'changeshippingaddress'},
             { label: 'New Shipping Address',value: 'newshippingaddress'},
@@ -61,9 +64,7 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
 
     matchingInfo = {
         primaryField: { fieldPath: "Pincode__c" },
-        additionalFields: [{ fieldPath: "City__r.Name",operator: "ne",
-        value: "",}],
-        
+        additionalFields: [{ fieldPath: "City__r.Name"}] 
     };
 
     displayInfo = {
@@ -82,8 +83,7 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
 
     matchingInfo1 = {
         primaryField: { fieldPath: "Name" },
-        additionalFields: [{ fieldPath: "Combined_Address__c",operator: "ne",
-        value: "",}],
+        additionalFields: [{ fieldPath: "Combined_Address__c"}],
         
     };
 
@@ -103,25 +103,40 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
             this.valueSelected2 = false;
             this.valueSelected3 = false;
             this.valueSelected4 = false;
+            this.valueSelected5 = false;
             this.showButtons = true;
+            this.showButtons1 = false;
             this.ShowLoding = false;
-        }
-        else if(this.value5 =='phone'){
+        }else if (this.value5 == 'phone') {
             this.valueSelected1 = false;
+            this.valueSelected5 = false;
             this.valueSelected2 = true;
             this.valueSelected3 = false;
             this.valueSelected4 = false;
             this.showButtons = true;
+            this.showButtons1 = false;
+            this.ShowLoding = false;
+        } 
+        else if(this.value5 =='phone1'){
+            this.valueSelected1 = false;
+            this.valueSelected5 = true;
+            this.valueSelected2 = false;
+            this.valueSelected3 = false;
+            this.valueSelected4 = false;
+            this.showButtons = false;
+            this.showButtons1 = true;
             this.ShowLoding = false;
         }
         else if(this.value5 =='changeBilingaddress'){
             this.valueSelected1 = false;
+            this.valueSelected5 = false;
             this.valueSelected2 = false;
             this.valueSelected3 = true;
             this.valueSelected4 = false;
             this.showButtons = false;
+            this.showButtons1 = false;
             this.handleRemoveAttachment();
-            ////console.log('Inside Fetch Account:',this.objArrey );
+            console.log('Inside Fetch Account:',this.objArrey );
             this.changeRequestObj.name = this.objArrey[0].Name;
             this.changeRequestObj.dealerName = this.objArrey[0].Name;
             this.changeRequestObj.dealerCode = this.objArrey[0].ERP_Customer_Code__c;
@@ -131,9 +146,11 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
         else if(this.value5 =='changeshippingaddress'){
             this.valueSelected1 = false;
             this.valueSelected2 = false;
+            this.valueSelected5 = false;
             this.valueSelected3 = false;
             this.valueSelected4 = true;
             this.showButtons = false;
+            this.showButtons1 = false;
             this.filter1 = {
                 criteria: [
                     {
@@ -158,9 +175,11 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
         else if(this.value5 =='newshippingaddress'){
             this.valueSelected1 = false;
             this.valueSelected2 = false;
+            this.valueSelected5 = false;
             this.valueSelected3 = false;
             this.valueSelected4 = true;
             this.showButtons = false;
+            this.showButtons1 = false;
             this.handleRemoveAttachment();
             this.shippinglable = 'New';
             this.changeRequestObj.name = this.objArrey[0].Name;
@@ -177,50 +196,21 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
     }
 
     handleNavigation(epId,emailId,phoneNo,erpCode){
-    //     let compDetails = {
-    //         componentDef: "c:yinEnterAadhaarVerificationCmp",
-    //         attributes: {
-    //         securityId:epId,
-    //         emailId1:emailId,
-    //         phoneNo1: phoneNo,
-    //         module:'changeRequest'  
-              
-    //         }
-    //     }
-    //     let encodedComponentDef = btoa(JSON.stringify(compDetails));
-    //     this[NavigationMixin.Navigate]({
-    //     type: 'standard__webPage',
-    //   attributes: {
-    //    url: '/one/one.app#' + encodedComponentDef
-    //    }
-    //  }) 
       console.log('ERP Code:',erpCode);
     this.aadharVerificationParam = {epId:epId,emailId:emailId,phoneNo:phoneNo,module:'changeRequest',erpCustomerCode:erpCode};
-    //console.log('epid:', epId);
     }
 
     async fetchDealerAccounts(){
-        ////console.log('@@@recordId:', this.recordId);
+        console.log('@@@recordId:', this.recordId);
        return await getDealerAcc ({dealerAccount:this.recordId});
 
     }
 
     async handlePincode(e){
-        ////console.log('e.target.value:', e.detail.recordId);
+        console.log('e.target.value:', e.detail.recordId);
         this.changeRequestObj.pincodeId = e.detail.recordId;
         if(this.changeRequestObj.pincodeId != null){
             let pincodes = await getPinCodeDetail({pincode:this.changeRequestObj.pincodeId})
-            // this.changeRequestObj.city=pincodes[0].City__r.Name;
-            // this.changeRequestObj.state=pincodes[0].State__r.Name;
-            // this.changeRequestObj.district=pincodes[0].District__r.Name;
-            // this.changeRequestObj.country=pincodes[0].Country__r.Name;
-            // this.changeRequestObj.subDistrict=pincodes[0].Sub_District__r.Name;
-            // this.changeRequestObj.cityId=pincodes[0].City__c;
-            // this.changeRequestObj.stateId=pincodes[0].State__c;
-            // this.changeRequestObj.countryId=pincodes[0].Country__c;
-            // this.changeRequestObj.districtId=pincodes[0].District__c;
-            // this.changeRequestObj.subDistrictId=pincodes[0].Sub_District__c;
-            // this.changeRequestObj.pincodeId=pincodes[0].Id; 
             this.changeRequestObj.city=pincodes[0].City__c !== null && pincodes[0].City__c !== undefined ? pincodes[0].City__r.Name:'';
             this.changeRequestObj.state=pincodes[0].State__c !== null && pincodes[0].State__c !== undefined ? pincodes[0].State__r.Name:'';
             this.changeRequestObj.country = pincodes[0].Country__c !== null && pincodes[0].Country__c !== undefined ? pincodes[0].Country__r.Name:'';
@@ -245,7 +235,7 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
         
         if(this.changeRequestObj.shipToAddressId != null){
             let shipToAddress = await getShipToAddress({shipToId:this.changeRequestObj.shipToAddressId})
-            ////console.log('@@@@@@@:', JSON.stringify(shipToAddress));
+            console.log('@@@@@@@:', JSON.stringify(shipToAddress));
             this.changeRequestObj.address1=shipToAddress[0].Address__c === null || shipToAddress[0].Address__c === undefined ? '':shipToAddress[0].Address__c;
             this.changeRequestObj.address2=shipToAddress[0].Address2__c === null || shipToAddress[0].Address2__c === undefined ? '':shipToAddress[0].Address2__c;
             this.changeRequestObj.city=shipToAddress[0].City__c !== null && shipToAddress[0].City__c !== undefined ? shipToAddress[0].City__r.Name:'';
@@ -310,22 +300,10 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
 
     handlePhoneChange(e){
         this.changeRequestObj.phoneNo = e.target.value;
-        // if(!numValue.test(this.changeRequestObj.phoneNo)){
-        //     //console.log('inside regex:');
-        //     this.showToastmessage('Error', 'Please enter a valid 10-digit phone number.', 'error');
-        //    return;
-        // }
-        // let numVal = e.target.value;
-        // let numValue = /^[0-9]+$/;
-        // if ( !numValue.test(numVal)) {
-        //     this.showToastmessage('Error', 'Please enter a valid 10-digit phone number.', 'error');
-        //     return;
-        // }
-        // else if ( numVal.length > 10) {
-        //     this.showToastmessage('Error', 'Please enter a only 10-digit phone number.', 'error');
-        //     return;
-        // }
-        // this.changeRequestObj.phoneNo = numVal;
+    }
+
+    handlePhone1Change(e){
+        this.changeRequestObj.phoneNo1 = e.target.value;
     }
 
     handleEmailChange(e){
@@ -350,8 +328,8 @@ async handleSubmit() {
     let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const closeEvent = new CustomEvent('close');
     try {
-        ////console.log('@@crType===', JSON.stringify(this.changeRequestObj))
-        ////console.log('!@!@!@@:', this.changeRequestObj.attachmentId);
+        console.log('@@crType===', JSON.stringify(this.changeRequestObj))
+        console.log('!@!@!@@:', this.changeRequestObj.attachmentId);
         this.changeRequestObj.dealerId = this.recordId;
         // if (!this.changeRequestObj.emailId && (this.value5 == 'email')) {
         //     this.ShowLoding = false;
@@ -369,6 +347,11 @@ async handleSubmit() {
         //     return;
         // }
         else if (this.value5 == 'phone' && (!this.changeRequestObj.phoneNo || !numValue.test(this.changeRequestObj.phoneNo) || this.changeRequestObj.phoneNo.length < 10 || this.changeRequestObj.phoneNo.length > 10)) {
+            //console.log('inside Phone Condition:'); 
+            this.ShowLoding = false;
+            this.showToastmessage('Error', 'Please enter a valid 10-digit phone number.', 'error');
+            return;
+        }else if (this.value5 == 'phone1' && (!this.changeRequestObj.phoneNo1 || !numValue.test(this.changeRequestObj.phoneNo1) || this.changeRequestObj.phoneNo1.length < 10 || this.changeRequestObj.phoneNo1.length > 10)) {
             //console.log('inside Phone Condition:'); 
             this.ShowLoding = false;
             this.showToastmessage('Error', 'Please enter a valid 10-digit phone number.', 'error');
@@ -407,7 +390,17 @@ async handleSubmit() {
                 //console.log('recID:',obj.changeRequestId);
                 
             
-            } else if (this.value5 == 'changeBilingaddress' ) {
+            }else if (this.value5 == 'phone1') {
+                //console.log('inside Phone:',this.changeRequestObj.phoneNo);
+                this.showToastmessage('Success', 'Secondary Phone Number change request has been sent successfully for approval.', 'Success');
+                //this.handleNavigation(obj.changeRequestId, this.changeRequestObj.emailId, this.changeRequestObj.phoneNo,this.objArrey[0].ERP_Customer_Code__c);
+                //console.log('recID:',obj.changeRequestId);
+                this.dispatchEvent(new CloseActionScreenEvent());
+                this.dispatchEvent(closeEvent);
+                
+            
+            } 
+            else if (this.value5 == 'changeBilingaddress' ) {
                     this.showToastmessage('Success', 'Billing Address change request has been sent successfully for approval.', 'Success');
                     this.dispatchEvent(new CloseActionScreenEvent());
                     this.dispatchEvent(closeEvent);
