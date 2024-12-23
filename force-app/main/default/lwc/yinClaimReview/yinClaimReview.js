@@ -2,8 +2,8 @@
  * @description       : 
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI
- * @created date      : 11-10-2024
- * @last modified on  : 11-10-2024
+ * @created date      : 19-12-2024
+ * @last modified on  : 19-12-2024
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
  * Modifications Log
  * Ver   Date         Author                                      Modification
@@ -63,18 +63,24 @@ export default class YinClaimReview extends LightningElement {
     @track isModalOpen = false;
     @track selectedImageType = '';
     @track updatedImages = {serialImg : '',
-        outsideImg : '',
-        insideImg : '',
-        depthGaugeImg : '',
-        odometerImg :'',
-        extraImg : '',
-        serialFlag : false,
-        outFlag : false,
-        inFlag : false,
-        depthFlag : false,
-        odoFlag : false,
-        extraFlag : false
-       };
+                            outsideImg : '',
+                            insideImg : '',
+                            depthGaugeImg : '',
+                            odometerImg :'',
+                            extraImg : '',
+                            serialImgDoc : '',
+                            outsideImgDoc : '',
+                            insideImgDoc : '',
+                            depthGaugeImgDoc : '',
+                            odometerImgDoc :'',
+                            extraImgDoc : '',
+                            serialFlag : false,
+                            outFlag : false,
+                            inFlag : false,
+                            depthFlag : false,
+                            odoFlag : false,
+                            extraFlag : false
+                            };
 
     connectedCallback(){
         console.log('inside Cont:');
@@ -551,26 +557,32 @@ export default class YinClaimReview extends LightningElement {
         this.claimObj.images1 = this.claimObj.images1 || {}; 
         if(this.updatedImages.serialFlag == true ){
             this.updatedImages.serialImg = uploadedFiles[0].contentVersionId;
+            this.updatedImages.serialImgDoc = uploadedFiles[0].documentId;
             this.serialUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
         }
         else if(this.updatedImages.outFlag == true){
             this.updatedImages.outsideImg = uploadedFiles[0].contentVersionId;
+            this.updatedImages.outsideImgDoc = uploadedFiles[0].documentId;
             this.outUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
         }
         else if(this.updatedImages.inFlag  == true){
             this.updatedImages.insideImg = uploadedFiles[0].contentVersionId;
+            this.updatedImages.insideImgDoc = uploadedFiles[0].documentId;
             this.inUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
         }
         else if(this.updatedImages.depthFlag == true){
             this.updatedImages.depthGaugeImg = uploadedFiles[0].contentVersionId;
+            this.updatedImages.depthGaugeImgDoc = uploadedFiles[0].documentId;
             this.dgUrl= this.baseUrl+uploadedFiles[0].contentVersionId;
         }
         else if(this.updatedImages.odoFlag == true){
             this.updatedImages.odometerImg = uploadedFiles[0].contentVersionId;
+            this.updatedImages.odometerImgDoc = uploadedFiles[0].documentId;
             this.odoUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
         }
         else if(this.updatedImages.extraFlag == true){
             this.updatedImages.extraImg = uploadedFiles[0].contentVersionId;
+            this.updatedImages.extraImgDoc = uploadedFiles[0].documentId;
             this.extraUrl = this.baseUrl+uploadedFiles[0].contentVersionId;
         }
         
