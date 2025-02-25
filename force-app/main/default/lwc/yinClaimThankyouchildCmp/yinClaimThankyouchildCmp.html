@@ -2,7 +2,7 @@
 @description       : Claim Register Thank You Component
 @author            : Amol Patil/amol.patil@skinternational.com
 @group             : SKI
-@last modified on  : 15-03-2024
+@last modified on  : 12-02-2025
 @last modified by  : Amol Patil/amol.patil@skinternational.com
 -->
 <template>
@@ -57,7 +57,18 @@
 
                     {showText1}<b>{chargeableAmount}</b>{showText2}The above-mentioned amount and percentage wear is provisional, based on the primary information filled in at the point of sales. <br/>
                     The final amount shall be calculated upon review by Yokohama India representative as per Yokohama India warranty policy.</p>
+                     <br/>
+                     <div if:true={highWearPercent}>
+                        <p style="font-size:12px; color:#333; text-align:center;"><strong>Remark:</strong> Wear percentage more than 50%, please contact your respective Yokohama representative.</p>
+                    </div>
+        
+                    <div if:true={warrantyExpired}>
+                        <p style="font-size:12px; color:#333; text-align:center;"><strong>Remark:</strong> The tyre purchase date is more than 18 months, please contact your respective Yokohama representative.</p>
+                    </div>
 
+                    <div if:true={warrantyRegistrationDate}>
+                        <p style="font-size:12px; color:#333; text-align:center;"><strong>Remark:</strong> Claim is not valid, Warranty registration is done after 7 days of invoice date, please contact your respective Yokohama representative.</p>
+                    </div>
                     
                     </div>
 

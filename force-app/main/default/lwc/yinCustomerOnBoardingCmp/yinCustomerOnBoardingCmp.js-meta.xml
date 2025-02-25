@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <isExposed>True</isExposed>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordAction</target>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="recordId" type="String" label="Id of the Record"></property>
+            <property name="AccountName" type="String" label="Account Name of the Record"></property>
+            <property name="BusinessType" type="String" label="Business Type of the Record"></property>
+            <property name="ContentDocumentId" type="String" label="Content Document Id"></property>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

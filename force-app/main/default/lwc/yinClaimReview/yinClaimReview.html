@@ -2,8 +2,8 @@
   @description       : 
   @author            : Amol Patil/amol.patil@skinternational.com
   @group             : SKI
-  @created date      : 11-10-2024
-  @last modified on  : 11-10-2024
+  @created date      : 21-01-2025
+  @last modified on  : 21-01-2025
   @last modified by  : Amol Patil/amol.patil@skinternational.com
   Modifications Log
   Ver   Date         Author                                      Modification
@@ -142,7 +142,7 @@
                             </div>
          
                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
-                                <lightning-input type="text" label="Tyre Serial Number" value={tyreObj.tyreSerialNo} disabled={disableFields}></lightning-input>
+                                <lightning-input type="text" label="Tyre Serial Number" value={tyreObj.tyreSerialNo} onchange={handleSerialChange} disabled={disableFields}></lightning-input>
                             </div>
          
                             <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
@@ -306,7 +306,7 @@
                            </div>
                             <!-- Change added By Amol as if:true condition -->
                            <div if:true={isRejected1} class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:15px;">
-                            <lightning-input type="number" label="Chargable Amount (with Handling Charges)" value={claimObj.amount} formatter="currency" step="0.01" min="0" disabled="true"></lightning-input>
+                            <lightning-input type="number" label="Chargeable Amount (with Handling Charges)" value={claimObj.amount} formatter="currency" step="0.01" min="0" disabled="true"></lightning-input>
                            </div>
 
 

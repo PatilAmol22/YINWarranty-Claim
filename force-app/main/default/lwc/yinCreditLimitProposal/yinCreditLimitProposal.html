@@ -1,0 +1,630 @@
+<!--
+  @description       : Component For Credit Limit Proposal
+  @author            : saurabh.pandey@skinternational.com
+  @group             : SKI
+  @last modified on  : 01-23-2025
+  @last modified by  : saurabh.pandey@skinternational.com
+-->
+<template>
+    <div class="slds-is-relative">
+        <template if:true={showLoading}>
+            <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+    </template>
+    
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin: 0 auto;">
+
+                <div style="border:1px solid #000; border-radius:4px; padding:0px;">
+                   
+                   <!-- Header -->
+                    <div
+                        style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; border-top-left-radius:4px; border-top-right-radius:4px; font-size:16px; padding:5px; display: flex; align-items: center; justify-content: center; height: 40px;">
+                        <span style="font-size:14px; text-align:center;">Credit Limit Proposal</span>
+                    </div>
+
+
+                <div class="slds-grid slds-wrap slds-gutters" style="padding: 10px;">
+     <!-- First Form Start-->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                     <!-- Dealer Name -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                            <lightning-record-picker 
+                            object-api-name="Account"
+                            type="text" 
+                            label="Dealer Name/Code" 
+                            placeholder="Enter Dealer Name/Code"
+                            value={accountId}
+                            matching-info={matchingInfo}
+                            display-info={displayInfo} 
+                            filter={filter} 
+                            class="clear"
+                            onchange={handleDealerChange} 
+                            required="true"
+                            disabled={disableFirstFormFields}
+                            >
+                        </lightning-record-picker>
+                        <!-- </div> -->
+                    </div>
+
+                   
+                    <!-- Location -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="text" 
+                        label="Location" 
+                        onremove={handleRemoveAccount} 
+                        value={location} 
+                        disabled 
+                        required>
+                        </lightning-input>
+                       
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    <!--Type -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-combobox    
+                        name="" 
+                        label="Type" 
+                        value={type} 
+                        options={typeOptions} 
+                        onchange={handleInputChange} 
+                        disabled={disableFirstFormFields}
+                       ></lightning-combobox>
+                    </div>
+                    <div  if:true={showDiv} class="slds-col slds-size_1-of-1 slds-large-size_6-of-12"></div>
+                     <!-- Credit Days -->
+                     <div  if:true={showCreditDays} class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-combobox 
+                        name="" 
+                        label="Credit Days" 
+                        value={creditDays} 
+                        options={creditDaysOptions} 
+                        onchange={handleCreditDaysChange}  
+                        disabled={disableFirstFormFields}
+                        required></lightning-combobox>
+                    </div>
+                     
+                   <!--Expiration Date -->
+                    <div if:true={showExpirationDate} class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="date"
+                        placeholder="Select Date" 
+                        label="Expiration Date" 
+                        value={expirationDate} 
+                        onchange={handleExpirationDateInputChange}  
+                        disabled={disableFirstFormFields}
+                        required
+                        >
+                        </lightning-input>
+                    </div>
+                    <div style="clear:both;"></div>
+                     
+                    <div if:true={showDiv2} class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                   
+                    <!-- Proposed Credit Limit -->
+                  <div if:true={showProposedLimit} class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                    <lightning-input 
+                       type="number" 
+                       placeholder="Enter Proposed Credit Limit" 
+                       label="Proposed Credit Limit" 
+                       value={proposedCreditLimit} 
+                       onchange={handleProposedCreditLimitInputChange} 
+                       disabled={disableFirstFormFields} 
+                       required
+                       pattern="^\d+(\.\d{1,2})?$"
+                       title="Please enter number upto two decimal places"
+                    ></lightning-input>
+                  </div>
+               
+                <!--DOC -->
+                   <div  if:true={showDoc} class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                    <lightning-input 
+                        type="date" 
+                        placeholder="" 
+                        label="DOC" 
+                        value={doc} 
+                        onchange={handleInputChange}
+                        disabled
+                        >
+                    </lightning-input>
+                  </div>
+                
+                  <div if:true={showDiv4} class="slds-col slds-size_1-of-1 slds-large-size_4-of-12"></div>
+                  <div if:true={showDiv5} class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+                 
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    
+                   <!-- Comments -->
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                    <lightning-textarea 
+                    label="Comments" 
+                    placeholder="Enter some comments" 
+                    value={comments} 
+                    onchange={handleInputChange}  
+                    disabled={disableFirstFormFields}
+                    >
+                    </lightning-textarea>
+                   </div>
+                
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12"></div>
+                   
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                     <!-- Current Credit Limit -->
+                     <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="text" 
+                        label="Current Credit Limit" 
+                        value={currentCreditLimit} 
+                        disabled="true"
+                >
+                        </lightning-input>
+                    </div>
+                    <!--Current Outstanding -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="text" 
+                        label="Current Outstanding" 
+                        value={currentOutStanding}
+                        disabled="true"></lightning-input>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                     <!--Current Security Deposit -->
+                     <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="text" 
+                        label="Current Security Deposit" 
+                        value={currentSecurityDeposite} 
+                        disabled="true"
+                >
+                    </lightning-input>
+                    </div>
+                    
+                     <!-- 0-30 Days Outstanding -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="number" 
+                        label="0-30 Days Outstanding" 
+                        value={zeroToThirtydaysOutstanding} 
+                        disabled="true"
+                >
+                        </lightning-input>
+                    </div>
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+    <!-- 31-60 Days Outstanding -->                   
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    <!-- 31-45 Days Outstanding -->
+                     <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="number" 
+                        label="31-45 Days Outstanding" 
+                        value={thirtyOneToFourtyFivedaysOutstanding} 
+                        disabled="true"
+                >
+                    </lightning-input>
+                    </div>
+                     <!-- 46-60 Days Outstanding -->
+                     <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="number" 
+                        label="46-60 Days Outstanding" 
+                        value={FourtySixToSixtydaysOutstanding} 
+                        disabled="true"
+                >
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+<!-- 31-60 Days Outstanding -->               
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+                     <!-- Greater than 60 Days Outstanding -->
+                     <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="number" 
+                        label="Greater than 60 Days Outstanding" 
+                        value={greaterThanNintydayssOutstanding} 
+                        disabled="true"
+                >
+                        </lightning-input>
+                    </div>
+
+                     <!-- Proposed  Ratio -->
+                     <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="text" 
+                        label="Proposed  Ratio" 
+                        value={proposedRatio} 
+                        disabled="true"
+                >
+                        </lightning-input>
+                    </div>
+                  
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    <!-- Current Ratio -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="text" 
+                        label="Current Ratio" 
+                        value={currentRatio1} 
+                        disabled="true"
+                >
+                        </lightning-input>
+                    </div>
+
+                     <!-- Security Cheque -->
+                     <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input type="file"
+                        label="Security Cheque"
+                        onchange={handleSecurityChequeFileSelection}
+                        name="Security File"
+                        multiple
+                        disabled={disableFirstFormFields}
+                        required={isSecurityChequeRequired}>
+                       </lightning-input>
+
+                       <!-- <lightning-file-upload 
+                        label="Security Cheque"
+                        name="fileUploader"
+                        accept={acceptedFormats} 
+                        record-id={myRecordId} 
+                        onuploadfinished={handleSecurityChequeUploadFinished}
+                        multiple 
+                        disabled={disableFirstFormFields} 
+                        required>
+                        </lightning-file-upload> -->
+
+                       <template if:true={securityChequeFiles}>
+                        <template for:each={securityChequeFiles} for:item="file" for:index="index">
+                            <div key={file.fileName} class="slds-m-bottom_small">
+                                
+                                <lightning-input value={file.fileName} disabled={disableFirstFormFields}></lightning-input>
+    
+                                <template if:true={shouldShowRemoveButton}>
+                                    <lightning-button-icon icon-name="utility:close"
+                                    alternative-text="Remove"
+                                    data-id={index}
+                                    data-type="securityCheque"
+                                    onclick={removeReceiptImage}
+                                    style="text-align:right; float:right;"  
+                                    size="xx-small"  
+                                    ></lightning-button-icon>
+                                 </template>
+                            </div>
+                         </template>
+                      </template>
+                    
+                        </div>
+    
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    
+        
+                  <!-- Is Security Check Already Uploaded Checkbox -->
+                  <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12"></div>
+                  <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: -10px;">
+                    <div class="slds-m-around_medium">
+                        <lightning-input type="checkbox"
+                            label="Is Security Check Already Uploaded"
+                            checked={isChecked}
+                            onchange={handleCheckboxChange}>
+                        </lightning-input>
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                  <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+            <!-- Limit Request Letter -->
+
+            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                <lightning-input type="file"
+                    label="Limit Request Letter"
+                    onchange={handleLimitRequestFileSelection}
+                    name="Limit Request Letter"
+                    multiple
+                    disabled={disableFirstFormFields}
+                    required
+                    >
+                </lightning-input>
+                <!-- <lightning-file-upload 
+                    label="Limit Request Letter"
+                    name="fileUploader"
+                    accept={acceptedFormats} 
+                    record-id={myRecordId} 
+                    onuploadfinished={handleLimitRequestUploadFinished}
+                    multiple 
+                    disabled={disableFirstFormFields} 
+                    required>
+                </lightning-file-upload> -->
+
+                <template if:true={limitRequestFiles}>
+                    <template for:each={limitRequestFiles} for:item="file" for:index="index">
+                        <div key={file.fileName} class="slds-m-bottom_small">
+                            <lightning-input value={file.fileName} disabled={disableFirstFormFields}></lightning-input>
+                            <template if:true={shouldShowRemoveButton}>
+                                <lightning-button-icon icon-name="utility:close"
+                                alternative-text="Remove"
+                                data-id={index}
+                                data-type="limitRequest"
+                                onclick={removeReceiptImage}
+                                style="text-align:right; float:right;"  
+                                size="xx-small"  
+                                ></lightning-button-icon>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+            </div>
+
+            <!-- Financials for Last 2 Year (Audited) -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input type="file"
+                            label="Financials for Last 2 Year (Audited)"
+                            onchange={handleFinancialFileSelection}
+                            name="Financial File"
+                            multiple
+                            disabled={disableFirstFormFields}
+                            required={isFinancialFieldRequired}>
+                        </lightning-input>
+                        <!-- <lightning-file-upload 
+                            label="Financials for Last 2 Year (Audited)"
+                            name="fileUploader"
+                            accept={acceptedFormats} 
+                            record-id={myRecordId} 
+                            onuploadfinished={handleUploadFinished}
+                            multiple 
+                            disabled={disableFirstFormFields} 
+                            required>
+                        </lightning-file-upload> -->
+                        <template if:true={financialFiles}>
+                            <template for:each={financialFiles} for:item="file" for:index="index">
+                                <div key={file.fileName} class="slds-m-bottom_small">
+                                    <lightning-input value={file.fileName} disabled={disableFirstFormFields}></lightning-input>
+                                    <template if:true={shouldShowRemoveButton}>
+                                        <lightning-button-icon icon-name="utility:close"
+                                                               alternative-text="Remove"
+                                                               data-id={index}
+                                                               data-type="financial"
+                                                               onclick={removeReceiptImage}
+                                                               style="text-align:right; float:right;"  
+                                                               size="xx-small"  
+                                                               ></lightning-button-icon>
+                                    </template>
+                                </div>
+                            </template>
+                        </template>
+                       </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                                       
+                 <!-- Instructions -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                    <hr style="margin:15px 0"/>
+                    <label>Instructions :</label>
+                        <ul class="slds-list_dotted">
+                            <li>File size should be less than 1MB.</li>
+                            <li>Multiple files cannot be uploaded against each document type.</li>
+                        </ul> 
+                        <hr style="margin:15px 0"/>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+                <!-- Last 6 Months Sales and Collection -->
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top: 15px;">
+                            <div style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                                <span style="font-size:14px; text-align:left;">Last 6 Months Sales and Collection</span>
+                            </div>
+                        
+                            <div style="padding:5px;" class="slds-scrollable_x">
+         
+                            <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_striped slds-no-row-hover" style="border:1px solid rgb(229, 229, 229)" role="grid" aria-label="resized column">
+                                <thead>
+                                <tr>
+                                    <th style="padding:4px; width: 300px;">Month</th>
+                                    <template for:each={months} for:item="month">
+                                        <th style="font-weight: bold;color: #000!important; text-align:right; padding:4px; width: 300px;" key={month.key}>{month.value}</th>
+                                    </template>
+                                  
+                                </tr>
+                            </thead>
+                    
+                            <tbody>
+                                <template for:each={salesCollectionData} for:item="mapKey">
+                                    <tr key={mapKey.key}>
+                                        <td style="padding:4px; width: 150px;">
+                                            <div title={mapKey.key}><b>{mapKey.key}</b></div>
+                                        </td>
+                                        <template for:each={mapKey.value} for:item="innerMap">
+                                            <td style="text-align:right; padding:4px; width: 150px;" key={innerMap.key}>
+                                            {innerMap.value}
+                                            </td>
+                                        </template>
+                                    </tr>
+                                </template>
+                                
+                            </tbody>
+        
+                        </table>
+        
+                    </div>
+                    </div>
+
+
+
+                   <!-- Last 6 Months payment Trends -->
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12" style="margin-top: 15px;">
+                    <div style="margin-top:0; margin-bottom:0px; background:#000; color:#fff; font-weight:600; font-size:16px; padding:5px;">
+                        <span style="font-size:14px; text-align:left;">Last 6 Months Payment Trends</span>
+                    </div>
+                
+                    <div style="padding:5px;" class="slds-scrollable_x">
+ 
+                      
+                        <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_striped slds-no-row-hover" style="border:1px solid rgb(229, 229, 229)" role="grid" aria-label="resized column">
+                            <thead>
+                            <tr>
+                                <th style="padding:4px; width: 200px;">Month</th>
+                                <template for:each={months} for:item="month">
+                                    <th style="font-weight: bold;color: #000!important; text-align:right; padding:4px; width: 200px;" key={month.key}>{month.value}</th>
+                                </template>
+                              
+                            </tr>
+                        </thead>
+                
+                
+                        <tbody>
+                            <template for:each={paymentTrendsData} for:item="mapKey">
+                                <tr key={mapKey.key}>
+                                    <td style="padding:4px; width: 150px;">
+                                        <div title={mapKey.key}><b>{mapKey.key}</b></div>
+                                    </td>
+                                    <template for:each={mapKey.value} for:item="innerMap">
+                                        <td style="text-align:right; padding:4px; width: 150px;" key={innerMap.key}>
+                                        {innerMap.value}
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                            
+                        </tbody>
+                    </table>
+    
+                </div>
+    
+                </div>
+                <!-- </div> -->
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                    <hr style="margin: 15px 0 10px;"></hr>
+                </div>
+ <!-- First Form Stop-->
+
+  <!-- Second Form Start-->
+       <template if:false={isRegionalSalesManager}>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                <!-- Current Assets -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input type="number"
+                         placeholder="Enter Current Assets" 
+                         label="Current Assets" 
+                         value={currentAssets}
+                         onchange={handleCurrentAssetsInputChange} 
+                         disabled={disableSecondFormFields}
+                         pattern="^\d+(\.\d{1,2})?$"
+                         title="Please enter number upto two decimal places"
+                    
+                          ></lightning-input>
+                    </div>
+
+                    <!-- Current Liabilities -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="number"
+                        placeholder="Enter Current Liabilities " 
+                        label="Current Liabilities" 
+                        value={currentLiabilities} 
+                        onchange={handleCurrentLiabilitiesInputChange} 
+                        disabled={disableSecondFormFields}
+                        pattern="^\d+(\.\d{1,2})?$"
+                        title="Please enter number upto two decimal places"
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    <!-- Current Ratio -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input type="number"
+                         placeholder="Current Ratio" 
+                         label="Current Ratio" 
+                         value={currentRatio} 
+                         onchange={handleCurrentRatioInputChange}  
+                         disabled={disableCurrentRatioFields}
+                         pattern="^\d+(\.\d{1,2})?$"
+                         title="Please enter number upto two decimal places" 
+                    
+                         ></lightning-input>
+                    </div>
+
+                    <!-- Working Capital -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-input 
+                        type="number" 
+                        placeholder="Working Capital" 
+                        label="Working Capital" 
+                        value={workingCapital} 
+                        onchange={handleWorkingCapitalInputChange} 
+                        disabled={disableWorkingCapitalFields}
+                        pattern="^\d+(\.\d{1,2})?$"
+                        title="Please enter number upto two decimal places"
+                
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-12"></div>
+                    <!-- Status -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-form-element slds-form-element_horizontal" style="margin-top: 5px;">
+                        <lightning-combobox
+                        label="Status"
+                        placeholder="Select Status"
+                        options={statusOptions}
+                        value={status}
+                        onchange={handleStatusInputChange}
+                        name="status"
+                        disabled={disableStatusField}
+                
+                        required>
+                    </lightning-combobox>                   </div>
+                   <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12"></div>
+
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">
+                            <hr style="margin: 15px 0 10px;"></hr>
+                        </div>
+       </template>
+
+ <!-- Second Form Stop-->
+
+
+                  <!-- Button -->
+                        <div class="slds-size_12-of-12 slds-large-size_12-of-12"
+                            style="text-align:center;">
+                            <lightning-button label="Cancel" title="Cancel" onclick={handleCancelClick}></lightning-button>
+                            
+                            <lightning-button label="Submit" variant="brand"  title="Submit"
+                                    onclick={handleSubmit} style="margin-left:10px;" disabled={isSubmitDisabled}></lightning-button>
+                            </div>
+                   
+                        </div>
+
+                    
+
+                        <div style="clear:both;"></div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div> 
+</template>

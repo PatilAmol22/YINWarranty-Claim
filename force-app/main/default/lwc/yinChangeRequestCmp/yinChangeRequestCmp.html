@@ -50,6 +50,8 @@
                     <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
                     <div if:true={valueSelected2} class="slds-col slds-size_1-of-1 slds-large-size_10-of-12"
                         style="margin: 0 auto; margin-top: 15px;">
+                        <lightning-input type="text" label=" Old Phone" value={changeRequestObj.oldphoneNo} disabled="true"></lightning-input>
+                        <br/>
                         <lightning-input type="text" label="Phone" placeholder="Enter New Mobile Number" value={changeRequestObj.phoneNo} onchange={handlePhoneChange} required="true"></lightning-input>
                     </div>
                     
@@ -58,6 +60,8 @@
                     <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"></div>
                     <div if:true={valueSelected5} class="slds-col slds-size_1-of-1 slds-large-size_10-of-12"
                         style="margin: 0 auto; margin-top: 15px;">
+                        <lightning-input type="text" label=" Old Secondary Phone" value={changeRequestObj.oldphoneNo1} disabled="true"></lightning-input>
+                        <br/>
                         <lightning-input type="text" label="Secondary Phone" placeholder="Enter New Mobile Number" value={changeRequestObj.phoneNo1} onchange={handlePhone1Change} required="true"></lightning-input>
                     </div>
 

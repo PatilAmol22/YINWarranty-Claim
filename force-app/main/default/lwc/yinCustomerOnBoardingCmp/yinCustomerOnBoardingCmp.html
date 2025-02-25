@@ -1,0 +1,77 @@
+<template>
+
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+    <lightning-card title={title} icon-name="standard:account">
+        <div class="slds-grid slds-wrap slds-gutters"  style="margin:0 !important;">
+            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                
+                <lightning-combobox
+                name="combo1"
+                onchange={OnDocTypeChange}
+                class='combocmp'
+                label="Distributor Document"
+                value={selectedValue}
+                required="true"
+                placeholder="Select Document Type"
+                options={options}></lightning-combobox>
+            </div>
+             
+            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                <lightning-input type="Text" class='desccmp' value={Desc}  required="true" label="Description" placeholder="Enter Description" onchange={OnDescChange} >
+                  </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+            <lightning-input type="file" data-name="file" data-id="file-input" class='filecmp' onchange={handleFileChange}  required="true" name="uploadFile" label="Upload File" accept=".jpg, .csv, .png, .doc, .pdf">  
+            </lightning-input>  
+            <p if:true={fileName}>{fileName}</p>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-12 slds-align_absolute-center" style="margin-top: 10px" >    
+                <lightning-button label="Add" variant="Brand" onclick={handleSave}>  
+                </lightning-button>&nbsp;         
+                <lightning-button label="Reset" variant="destructive" onclick={handlereset}>  
+                </lightning-button>  
+            </div>
+        </div>
+        <template lwc:if={missingDoc}>  
+        <div style="color:#ff0000;margin-left: 10px" >
+            <template if:true={isMissing}>
+                <p><b>Required Document:</b></p>
+                <ol>
+                <template for:each={missingDoc} for:item="element" for:index="index">
+                    <li key={element}><b>{element}.</b></li>
+                </template>
+                </ol>
+            </template>
+        </div>
+    </template>
+
+        
+        <br/><br/>
+        
+         <div style="height:200px !important" >  
+            <lightning-datatable 
+            key-field="Id" 
+            data={loadData} 
+            columns={columns} 
+            hide-checkbox-column="true" 
+            show-row-number-column="true" 
+            onrowaction={callRowAction}>
+            </lightning-datatable> 
+      </div>  
+     
+
+        <footer class="slds-modal__footer">
+            <lightning-button  variant="brand-outline" onclick={handlePrevious} name="Previous" label="Previous">
+            </lightning-button>&nbsp;
+            <lightning-button variant="brand" onclick={handleNext} name="Next" label="Next">
+            </lightning-button>
+        </footer>
+
+    </lightning-card>
+</template>

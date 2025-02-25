@@ -2,8 +2,8 @@
   @description       : Claim Register Parent.
   @author            : Amol Patil/amol.patil@skinternational.com
   @group             : SKI
-  @created date      : 29-08-2024
-  @last modified on  : 29-08-2024
+  @created date      : 08-01-2025
+  @last modified on  : 08-01-2025
   @last modified by  : Amol Patil/amol.patil@skinternational.com
   Modifications Log
   Ver   Date         Author                                      Modification
@@ -83,7 +83,7 @@
                                       label=""
                                       class="customRadioCls"
                                       options={warrOption}
-                                      value={claimRegisterObj.warrentytype}
+                                      value={claimRegisterObj.warrantytype}
                                       type="radio"
                                       onchange={handleRadioChange1}
                                       disabled={isDisableWarrenty1}
@@ -104,7 +104,7 @@
                                       label=""
                                       class="customRadioCls"
                                       options={options}
-                                      value={claimRegisterObj.warrenty}
+                                      value={claimRegisterObj.warranty}
                                       type="radio"
                                       onchange={handleRadioChange}
                                       disabled={isDisableWarrenty}
@@ -127,15 +127,78 @@
                                         
                                         <div class="slds-grid slds-wrap slds-gutters" style="padding: 0px 10px 10px 10px;">
                                         <div if:true={isServiceEngineer}  class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 " style="margin-top:27px;">
-                                            <lightning-combobox
+                                            <!-- <lightning-combobox
                                             name="Dealer"
                                             label="OE Customer/Dealer"
                                             value={claimRegisterObj.dealer}
                                             placeholder="Select OE Customer"
                                             options={dealerOptions}
                                             onchange={handleComboboxChange} 
-                                            read-only={claimRegisterObj.isEditable}></lightning-combobox>
-                                           </div>
+                                            read-only={claimRegisterObj.isEditable}></lightning-combobox> -->
+
+                                            
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label" for="input">OE Customer/Dealer</label>
+                                                <div class="slds-form-element__control">
+                                                    <div class="slds-combobox_container">
+                                                        <div id="box" class={boxClass} aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                                                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                                               
+                                                                <!-- If a value is selected, show the custom pill -->
+                                                                <template if:true={isValueSelected}>
+                                                                    <div id="lookup-pill" class="slds-pill-container">
+                                                                        <div class="slds-pill slds-grid slds-align_absolute-center">
+                                                                            <lightning-icon class="slds-m-right_x-small" icon-name="standard:account" alternative-text="acc" size="small"></lightning-icon>
+                                                                            <span class="slds-truncate slds-grow">{selectedName}</span>
+                                                                            <button class="slds-button slds-button_icon slds-button_icon-bare" onclick={handleRemovePill} title="Remove">
+                                                                                <lightning-icon icon-name="utility:close" size="x-small" alternative-text="Remove"></lightning-icon>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </template>
+                                                                <!-- If no value is selected, show the search input -->
+                                                                <template if:false={isValueSelected}>
+                                                                    <div class="slds-p-top_none">
+                                                                        <lightning-input class={inputClass} type="search" id="input" value={searchTerm}
+                                                                            onclick={handleClick} onblur={onBlur} onchange={onChange} 
+                                                                            variant="label-hidden" autocomplete="off" placeholder={searchPlaceholder}>
+                                                                        </lightning-input>
+                                                                    </div>
+                                                                </template>                                           
+                                                            </div>                                            
+                                                            <!-- Dropdown List -->
+                                                            <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                                                                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                                                 <!-- If there are filtered records, show them -->
+                                                                    <template if:true={filteredRecords.length}>
+                                                                        <template for:each={filteredRecords} for:item="record">
+                                                                            <li key={record.Id} onclick={onSelectDealer} data-id={record.value} role="presentation" data-name={record.label}>
+                                                                                <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option">
+                                                                                    <lightning-icon class="slds-icon slds-icon--small" icon-name="standard:account" alternative-text="acc" size="small"></lightning-icon>
+                                                                                    <span class="slds-truncate">{record.label}</span>
+                                                                                </span>
+                                                                            </li>
+                                                                        </template>
+                                                                    </template>
+                                            
+                                                                    <!-- If no records are found, show a "No records found" message -->
+                                                                    <template if:false={filteredRecords.length}>
+                                                                        <li class="slds-listbox__empty slds-text-align_center slds-grid slds-grid_align-center">
+                                                                            <span class="slds-text-color_error">
+                                                                                Dealer Record Not Found
+                                                                            </span>
+                                                                        </li>
+                                                                    </template>
+                                                                                                                                    
+                                                                </ul>
+                                                            </div>
+                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                       
+                                        </div>
+                                        
 
                         <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:10px;">
                             <lightning-input type="text" label="Mobile/Warranty Registration Number/Vehicle Registration Number" placeholder="" value={tempRegistrationNo} onchange={handleInputChange} read-only={claimRegisterObj.isEditable}></lightning-input>
@@ -155,7 +218,7 @@
                     label="Select Warranty Registration Number"
                     value={claimRegisterObj.warrantyName}
                     placeholder="Select Warranty Registration Number"
-                    options={warrentyOptions}
+                    options={warrantyOptions}
                     onchange={handleComboboxChange}
                     disabled={warrantyDisabled} 
                     class="warrantyInput"
@@ -252,28 +315,85 @@
                         </div>
                         <div class="slds-grid slds-wrap slds-gutters" style="padding: 0px 10px 10px 10px;">
                     <div if:true={isServiceEngineer}  class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
-                        <lightning-combobox
+                        <!-- <lightning-combobox
                         name="Dealer"
                         label="OE Customer/Dealer"
                         value={claimRegisterObj.dealer}
                         placeholder="Select OE customer or dealer"
                         options={dealerOptions}
                         onchange={handleComboboxChange} 
-                        read-only={claimRegisterObj.isEditable}></lightning-combobox>
-                       </div>
+                        read-only={claimRegisterObj.isEditable}></lightning-combobox> -->
 
-                       
-                       
-                       <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" >
-                        <lightning-input read-only={claimRegisterObj.isEditable} onblur={handleSearchInput} type="search" label="Search Customer" value={claimRegisterObj.searchCustomer}></lightning-input>
-                       </div>
-
-
-                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:20px;">
-                        <lightning-button disabled={claimRegisterObj.isEditable} label="Add New Customer" variant="brand" title="Add New Customer" onclick={openModal}
-                        ></lightning-button>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="input">OE Customer/Dealer</label>
+                            <div class="slds-form-element__control">
+                                <div class="slds-combobox_container">
+                                    <div id="box2" class={boxClass} aria-expanded="true" aria-haspopup="listbox" role="combobox">
+                                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                            <!-- If a value is selected, show the custom pill -->
+                                            <template if:true={isValueSelected}>
+                                                <div id="lookup-pill2" class="slds-pill-container">
+                                                    <div class="slds-pill slds-grid slds-align_absolute-center">
+                                                        <lightning-icon class="slds-m-right_x-small" icon-name="standard:account" alternative-text="acc" size="small"></lightning-icon>
+                                                        <span class="slds-truncate slds-grow">{selectedName}</span>
+                                                        <button class="slds-button slds-button_icon slds-button_icon-bare" onclick={handleRemovePill} title="Remove">
+                                                            <lightning-icon icon-name="utility:close" size="x-small" alternative-text="Remove"></lightning-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <!-- If no value is selected, show the search input -->
+                                            <template if:false={isValueSelected}>
+                                                <div class="slds-p-top_none">
+                                                    <lightning-input class={inputClass} type="search" id="input2" value={searchTerm}
+                                                        onclick={handleClick} onblur={onBlur} onchange={onChange} 
+                                                        variant="label-hidden" autocomplete="off" placeholder={searchPlaceholder}>
+                                                    </lightning-input>
+                                                </div>
+                                            </template>
+                                        </div>
+                                      <!-- Dropdown List -->
+                                      <div id="listbox-id-11" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                         <!-- If there are filtered records, show them -->
+                                            <template if:true={filteredRecords.length}>
+                                                <template for:each={filteredRecords} for:item="record">
+                                                    <li key={record.Id} onclick={onSelectDealer} data-id={record.value} role="presentation" data-name={record.label}>
+                                                        <span class="slds-lookup__item-action slds-lookup__item-action--label" role="option">
+                                                            <lightning-icon class="slds-icon slds-icon--small" icon-name="standard:account" alternative-text="acc" size="small"></lightning-icon>
+                                                            <span class="slds-truncate">{record.label}</span>
+                                                        </span>
+                                                    </li>
+                                                </template>
+                                            </template>
+                    
+                                            <!-- If no records are found, show a "No records found" message -->
+                                            <template if:false={filteredRecords.length}>
+                                                <li class="slds-listbox__empty slds-text-align_center slds-grid slds-grid_align-center">
+                                                    <span class="slds-text-color_error">
+                                                        Dealer Record Not Found
+                                                    </span>
+                                                </li>
+                                            </template>                                                                  
+                                        </ul>
+                                    </div>
+                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                  
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" >
+                    <lightning-input read-only={claimRegisterObj.isEditable} onblur={handleSearchInput} type="search" label="Search Customer" value={claimRegisterObj.searchCustomer}></lightning-input>
                     </div>
+
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top:20px;">
+                    <lightning-button disabled={claimRegisterObj.isEditable} label="Add New Customer" variant="brand" title="Add New Customer" onclick={openModal}
+                    ></lightning-button>
+                </div>
+            </div>
 
                     <div class="slds-grid slds-wrap slds-gutters" style="padding: 0px 10px 10px 10px;">
                     <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">

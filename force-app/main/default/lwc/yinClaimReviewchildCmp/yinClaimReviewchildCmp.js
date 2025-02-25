@@ -2,7 +2,7 @@
  * @description       : YIN Claim Review Child Cmp to Review Details of Claim.
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI
- * @last modified on  : 30-08-2024
+ * @last modified on  : 12-02-2025
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
 **/
 import { LightningElement, api, track  } from 'lwc';
@@ -26,6 +26,8 @@ export default class YinClaimReviewchildCmp extends LightningElement {
 @track pickupValue;
 @track WithWarranty = true;
 @track WithOutWarranty = false;
+@track warrantyStartDate;
+@track invoiceDate;
 
 
 connectedCallback(){
@@ -33,6 +35,10 @@ connectedCallback(){
 console.log('inside Review damageCause :', this.damageCause);
 //this.checkAcceptCondition();
 this.objFromRegisterChild = {...this.objFromRegisterChild};
+console.log('inside Review  warr date:', this.objFromRegisterChild.warrantyDate);
+this.objFromRegisterChild.warrantyStartDate = this.objFromRegisterChild.warrantyDate;
+console.log('inside rev invoiceDate:',this.objFromRegisterChild.invoiceDate);
+this.objFromRegisterChild.invoiceDate = this.objFromRegisterChild.invoiceDate;  
 console.log('inside Review :', JSON.stringify(this.objFromRegisterChild));
 this.image1 = this.baseUrl+this.objFromRegisterChild.tyreSerialImgId;
 this.image2 = this.baseUrl+this.objFromRegisterChild.defectImgOutsideId;

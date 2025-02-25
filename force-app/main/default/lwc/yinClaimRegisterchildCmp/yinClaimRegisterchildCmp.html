@@ -2,7 +2,7 @@
   @description       : 
   @author            : Amol Patil/amol.patil@skinternational.com
   @group             : 
-  @last modified on  : 23-07-2024
+  @last modified on  : 08-01-2025
   @last modified by  : Amol Patil/amol.patil@skinternational.com
 -->
 <template>
@@ -214,16 +214,20 @@
                             <lightning-input type="text" label="Original Groove Depth" value={claimCombineChildObj.originalGrooveDepth} disabled="true" ></lightning-input>
                         </div> -->
 
-                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
                             <lightning-input read-only={claimCombineChildObj.isEditable} type="text" label="Remaining Groove Depth" value={claimCombineChildObj.remainingGrooveDepth} onblur={handleRGDChange} required="true"></lightning-input>
                         </div>
 
-                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
                             <lightning-input type="text" label="Wear %"  value={wearPercent} disabled="true"></lightning-input>
                         </div>
 
-                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12" style="margin-top: 15px;">
-                            <lightning-input read-only={claimCombineChildObj.isEditable} type="text" label="Total Running Kms" value={claimCombineChildObj.totalRunningKms} onblur={handleInputChange} required="true"></lightning-input>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
+                            <lightning-input  read-only={claimCombineChildObj.isEditable} type="text" label="Odometer Reading" value={claimCombineChildObj.odometerReading} onblur={handleOdometerChange} required="true"></lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12" style="margin-top: 15px;">
+                            <lightning-input read-only={claimCombineChildObj.isEditable} type="text" label="Total Running Kms" value={claimCombineChildObj.totalRunningKms} onblur={handleInputChange} disabled={isTotalKMSDisable}></lightning-input>
                         </div>
 
                         <div class="slds-col slds-size_1-of-1 slds-large-size_12-of-12">

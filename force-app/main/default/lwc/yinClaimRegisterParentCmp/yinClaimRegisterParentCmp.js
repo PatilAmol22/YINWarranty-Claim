@@ -2,8 +2,8 @@
  * @description       : Claim Register Parent.
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI
- * @created date      : 30-08-2024
- * @last modified on  : 30-08-2024
+ * @created date      : 12-02-2025
+ * @last modified on  : 12-02-2025
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
  * Modifications Log
  * Ver   Date         Author                                      Modification
@@ -64,7 +64,7 @@ export default class YinClaimRegisterParentCmp extends LightningElement {
 @track dealerObj = {};
 @track pickListOptions = [];
 @track filter = {};
-@track warrentyOpts = [];
+@track warrantyOpts = [];
 @track serialNoOpts = [];
 @track dealerOpts = [];
 @track tyreMap = new Map();
@@ -107,8 +107,15 @@ export default class YinClaimRegisterParentCmp extends LightningElement {
 @track tyreOpts = [];
 @track spectOpts = [];
 @track productObj = {plantCode : '',spectCode : '',weekYear : ''}
+
+@track searchPlaceholder = 'Search OE Customer/Dealer';
+@track selectedName;
+@track isValueSelected = false;
+@track searchTerm = '';
+@track boxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus';
+@track inputClass = '';
  
-@track claimRegisterObj = {editOrNew:'', claimRecordId:'',dealerId:'',dealerName:'',dealerCode:'',warrentytype:'Replacement',warrenty:'With Warranty',
+@track claimRegisterObj = {editOrNew:'', claimRecordId:'',dealerId:'',dealerName:'',dealerCode:'',warrantytype:'Replacement',warranty:'With Warranty',
                             registrationNo:'', warrantyName:'',warrantyNumber:'', customerId:'', customerName:'',
                             customerPhoneNo:'',vehicleId:'',registrationNumber:'',vehicleMake:'',vehicleModel:'',
                             tyreName:'', serialNumber:'',serialId:'',barCode:'',dealer:'',searchCustomer:'',
@@ -117,11 +124,11 @@ export default class YinClaimRegisterParentCmp extends LightningElement {
                             tyreSerialImgId : '',defectImgOutsideId:'',defectImgInsideId:'',treadDepthGaugeId:'',odometerReadingId:'',
                             extraImgId:'', tyreSerialVersionId:'',defectImgOutsideVersionId:'', defectImgInsideVersionId:'',
                             treadDepthGaugeVersionId:'',odometerReadingVersionId:'',extraImgVersionId:'',damageCondition:'',
-                            damageCause:[],claimPolicy:'',remainingGrooveDepth:'',wearPercent:0,totalRunningKms:'',
+                            damageCause:[],claimPolicy:'',remainingGrooveDepth:'',wearPercent:0,totalRunningKms:'',odometerReading:'',warrOdometerReading:'',
                             claimRemarks:'',uploadedFileName1:'',uploadedFileName2:'',uploadedFileName3:'',uploadedFileName4:'',
                             uploadedFileName5:'',uploadedFileName6:'',serialImgChange:false,outsideImgChange:false,insideImgChange:false,
-                            depthGaugeImgChange:false,odometerImgChange:false,extraImgChange:false,isEditable:false,warrantyStartDate:new Date(),
-                            warrantyDate:null,pattern1:'',tyreSize1:'',serialNumber1:''};
+                            depthGaugeImgChange:false,odometerImgChange:false,extraImgChange:false,isEditable:false,warrantyStartDate:new Date(),invoiceDate:new Date(),
+                            warrantyDate:null,pattern1:'',tyreSize1:'',serialNumber1:'',invoiceDate:null};
                            
 
  async connectedCallback(){
@@ -148,9 +155,9 @@ export default class YinClaimRegisterParentCmp extends LightningElement {
         this.claimRegisterObj.editOrNew = 'New';
         this.isDisableWarrenty = false;
         this.isDisableWarrenty1 = false;
-        this.claimRegisterObj.warrenty = 'With Warranty';
+        this.claimRegisterObj.warranty = 'With Warranty';
         await this.fetchOnLoadClaim();
-        // this.claimRegisterObj.warrentytype = 'OE';
+        // this.claimRegisterObj.warrantytype = 'OE';
     }
    
     this.isEnterOTPDisabled = true; 
@@ -200,7 +207,7 @@ filter1 = {
 
 
 async fetchOnLoadClaim(){
-   console.log('Inside fetchOnLoadClaim Check :',this.claimRegisterObj.warrenty);
+   console.log('Inside fetchOnLoadClaim Check :',this.claimRegisterObj.warranty);
    let claimInfo =  await reloadClaim({claimId:this.claimRegisterObj.claimRecordId ?? null});
    console.log('ClaimInfo Check :', claimInfo );
    let parseClaimInfo = JSON.parse(claimInfo);
@@ -253,17 +260,14 @@ if(this.isServiceEngineer){
        }else{
         this.claimRegisterObj.isEditable = true;
        }
-    console.log('@@@@@inside dealer :');
     this.claimRegisterObj.dealerId = parseClaimInfo.dealerList[0].id;
     console.log('@@@@@inside if :',this.claimRegisterObj.dealerId);
     this.claimRegisterObj.dealerName = parseClaimInfo.dealerList[0].name;
-    console.log('@@@@@inside if :',this.claimRegisterObj.dealerId);
     this.claimRegisterObj.dealerCode = parseClaimInfo.dealerList[0].erpCode;
     this.claimRegisterObj.dealerCity = parseClaimInfo.dealerList[0].city;
     this.claimRegisterObj.dealerState = parseClaimInfo.dealerList[0].state;
     this.dealerObj = parseClaimInfo.dealerList[0];
         if(parseClaimInfo.pickupList.length > 0 && Array.isArray(parseClaimInfo.pickupList) && parseClaimInfo.pickupList != []){
-        console.log('@@@@@inside if :',this.pickupOptions.length);
         for(let i = 0;i < parseClaimInfo.pickupList.length;i++){
             console.log('this.pickupLocationOpts Check :', JSON.stringify(parseClaimInfo.pickupList));
             this.pickupOptions = [...this.pickupOptions,{label:parseClaimInfo.pickupList[i].address,value:parseClaimInfo.pickupList[i].recordId}];
@@ -272,14 +276,12 @@ if(this.isServiceEngineer){
            this.claimRegisterObj.pickupLocation = this.claimRegisterObj.dealerId;
        }
 }
-console.log('this.recordId:',this.recordId);
    if(this.recordId){
-    console.log('inside this.recordId:',this.recordId);
-    this.claimRegisterObj.warrenty = parseClaimInfo.claimWrap.type;
-    this.checkWarrntyType(this.claimRegisterObj.warrenty);
+    this.claimRegisterObj.warranty = parseClaimInfo.claimWrap.type;
+    this.checkWarrntyType(this.claimRegisterObj.warranty);
     this.claimRegisterObj.status = parseClaimInfo.claimWrap.status;
-    console.log('status:',  this.claimRegisterObj.status);
-    console.log('inside check Reload when RecordId:',this.claimRegisterObj.warrenty);
+    //console.log('status:',  this.claimRegisterObj.status);
+    //console.log('inside check Reload when RecordId:',this.claimRegisterObj.warranty);
     this.claimRegisterObj.customerName= parseClaimInfo.claimWrap.customer.name;
     this.claimRegisterObj.customerId= parseClaimInfo.claimWrap.customer.id;
     this.claimRegisterObj.customerPhoneNo = parseClaimInfo.claimWrap.customer.mobile;
@@ -290,11 +292,12 @@ console.log('this.recordId:',this.recordId);
     let formattedDate = parseClaimInfo.claimWrap.vehicle.registrationDate.split('-');
     this.claimRegisterObj.registrationDate = formattedDate[2] + '/' + formattedDate[1] + '/' +formattedDate[0];
     if(parseClaimInfo.claimWrap.type =='With Warranty'){
-    this.warrentyOpts = [...this.warrentyOpts,{label:parseClaimInfo.claimWrap.warrantyNumber,value:parseClaimInfo.claimWrap.warrantyId}];
+    this.warrantyOpts = [...this.warrantyOpts,{label:parseClaimInfo.claimWrap.warrantyNumber,value:parseClaimInfo.claimWrap.warrantyId}];
     this.claimRegisterObj.warrantyName = parseClaimInfo.claimWrap.warrantyId;
     this.serialNoOpts = [...this.serialNoOpts,{label:parseClaimInfo.claimWrap.tyre.tyreSerialNo,value:parseClaimInfo.claimWrap.tyre.id}]
     this.claimRegisterObj.serialId = parseClaimInfo.claimWrap.tyre.id;
     this.claimRegisterObj.serialNumber = parseClaimInfo.claimWrap.tyre.tyreSerialNo;
+    
     console.log('inside check Reload++'+this.claimRegisterObj.warrantyName +','+ this.claimRegisterObj.customerId +','+ this.claimRegisterObj.vehicleId +','+ this.claimRegisterObj.serialId);
     if(this.claimRegisterObj.warrantyName  && this.claimRegisterObj.customerId && this.claimRegisterObj.vehicleId && this.claimRegisterObj.serialId ){
         this.nextDisabled = false;
@@ -324,6 +327,7 @@ console.log('this.recordId:',this.recordId);
    this.claimRegisterObj.remainingGrooveDepth = (parseClaimInfo.claimWrap.remainingGrooveDepth ?? 0).toString();
    this.claimRegisterObj.wearPercent = typeof parseClaimInfo.claimWrap.wear =='object' ? 0: parseClaimInfo.claimWrap.wear;
    this.claimRegisterObj.totalRunningKms = (parseClaimInfo.claimWrap.totalkm ?? 0).toString();
+   this.claimRegisterObj.odometerReading = (parseClaimInfo.claimWrap.odoReading ?? 0).toString();//added by tejashwini
    this.claimRegisterObj.claimPolicy = parseClaimInfo.claimWrap.policy;
    this.claimRegisterObj.natureOfComplaint = parseClaimInfo.claimWrap.natureOfComplaint;
    this.claimRegisterObj.pickupLocation = parseClaimInfo.claimWrap.pickupLocation;
@@ -383,21 +387,23 @@ get warrOption() {
 async handleRadioChange(event) {
     this.showLoading = true;
     await this.clearRegistrationPage();
-    this.claimRegisterObj.warrentytype = this.warrTypeCheck;
+    this.claimRegisterObj.warrantytype = this.warrTypeCheck;
     this.nextDisabled = true;
     this.warrantyDisabled = true;
     this.serialNoDisabled = true;
 
     const selectedOption = event.detail.value;
-    this.claimRegisterObj.warrenty = selectedOption;
-    this.checkWarrntyType(this.claimRegisterObj.warrenty);
-    
+    this.claimRegisterObj.warranty = selectedOption;
+    this.checkWarrntyType(this.claimRegisterObj.warranty);
+    this.selectedName = '';
+    this.isValueSelected = false;
+    this.searchTerm = '';
 }
 
 handleRadioChange1(event){
     const selectedOption1 = event.detail.value;
     this.warrTypeCheck = selectedOption1;
-    this.claimRegisterObj.warrentytype = selectedOption1;
+    this.claimRegisterObj.warrantytype = selectedOption1;
 
 }
 
@@ -413,6 +419,77 @@ getVehicleFilter(){
     ]}
 }
 
+//added by tejashwini
+    get filteredRecords() {
+        return this.dealerOpts.filter(record => record.label && record.label.toLowerCase().includes(this.searchTerm.toLowerCase()));
+    }
+    
+    handleClick() {
+        this.searchTerm = '';
+        this.inputClass = 'slds-has-focus';
+        this.boxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus slds-is-open';
+    }
+
+    onBlur() {
+        setTimeout(() => {
+            this.boxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus';
+        }, 1000);
+    }
+
+    async onSelectDealer(event) {
+        const selectedId = event.currentTarget.dataset.id;
+        const selectedName = event.currentTarget.dataset.name;
+
+        console.log('selectedId: ' + selectedId);
+        console.log('selectedName: ' + selectedName);
+    
+            this.showLoading = false; 
+            console.log('inside OE Value:');
+            
+            this.pickupOptions = [];
+            this.claimRegisterObj.dealer = selectedId;
+            this.claimRegisterObj.dealerId = selectedId;
+            this.selectedDealer = selectedId;
+            
+            // Fetch Dealer Info
+            let getDelInfo = await getDealerInfo({ accId: this.claimRegisterObj.dealer });
+            let parsedGetDelInfo = JSON.parse(getDelInfo);
+            
+            this.claimRegisterObj.dealerCode = parsedGetDelInfo.erpCode;
+            this.claimRegisterObj.dealerName = parsedGetDelInfo.name;
+            this.claimRegisterObj.dealerCity = parsedGetDelInfo.city;
+            this.claimRegisterObj.dealerState = parsedGetDelInfo.state;
+            this.dealerObj = parsedGetDelInfo;
+    
+            // Fetch Pickup Locations
+            let pickupList = await getPickupLocations({ accId: this.claimRegisterObj.dealer });
+            let parsedPickupList = JSON.parse(pickupList);
+            console.log('parsedPickupList:', JSON.stringify(parsedPickupList));
+    
+            for (let i = 0; i < parsedPickupList.length; i++) {
+                this.pickupOptions = [...this.pickupOptions, { label: parsedPickupList[i].address, value: parsedPickupList[i].recordId }];
+                this.pickListOptions = [...this.pickListOptions, { label: parsedPickupList[i].address, value: parsedPickupList[i].recordId }];
+            }
+        
+    
+        // Update UI based on selection
+        this.selectedName = selectedName;
+        this.isValueSelected = true;
+        this.boxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus';
+    }
+    
+
+    handleRemovePill() {
+        this.isValueSelected = false;
+        this.selectedName = '';
+        this.searchTerm = '';
+    }
+
+    onChange(event) {
+        this.searchTerm = event.target.value;
+    }
+    // End
+    
 async handleComboboxChange(event) {
     this.showLoading = true;
     const lable = event.target.label;
@@ -447,6 +524,8 @@ async handleComboboxChange(event) {
                     console.log('warrantyDate:', this.claimRegisterObj.warrantyDate);
                     console.log('warrantyStartDate:', warrantyStartDate);
                     let invoiceDate = new Date(warrantyDetailsObj.invoiceDate);
+                    this.claimRegisterObj.invoiceDate = invoiceDate;
+                    console.log('Invoice date in Parent:', this.claimRegisterObj.invoiceDate);
                     let timeDifference = warrantyStartDate.getTime() - invoiceDate.getTime();
                     let daysDifference = timeDifference / (1000 * 3600 * 24);
                     if (daysDifference > 7) {
@@ -468,6 +547,8 @@ async handleComboboxChange(event) {
                     this.claimRegisterObj.registrationNumber = warrantyDetailsObj.registrationNumber;
                     this.claimRegisterObj.vehicleMake = warrantyDetailsObj.companyName;
                     this.claimRegisterObj.vehicleModel = warrantyDetailsObj.modelName;
+                    this.claimRegisterObj.warrOdometerReading = warrantyDetailsObj.odometerReading; //Added for warranty odometer reading new CR:69
+                    console.log('Inside warrOdometerReading:',  this.claimRegisterObj.warrOdometerReading);
                     let formattedDate = warrantyDetailsObj.registrationDate.split('-');
                     this.claimRegisterObj.registrationDate = formattedDate[2] + '/' + formattedDate[1] + '/' +formattedDate[0];
                     console.log('Inside Tyre detail date :',  this.claimRegisterObj.registrationDate);
@@ -523,37 +604,37 @@ async handleComboboxChange(event) {
         this.claimRegisterObj.originalGrooveDepth = (this.tyreMap.get(value).ogd).toString();
         console.log('this.claimRegisterObj.originalGrooveDepth:', this.claimRegisterObj.originalGrooveDepth);
     }
-    else if(lable == 'OE Customer' || lable == 'OE Customer/Dealer'){
-        this.showLoading = false; 
-        console.log('inside OE Value:');
-        this.pickupOptions = [];
-        this.claimRegisterObj.dealer = value;
-        this.claimRegisterObj.dealerId = value;
-        this.selectedDealer = value;
-        let getDelInfo = await getDealerInfo({accId:this.claimRegisterObj.dealer})
-        let parsedGetDelInfo = JSON.parse(getDelInfo);
-        //this.claimRegisterObj.dealer = parsedGetDelInfo.id;
-        this.claimRegisterObj.dealerCode = parsedGetDelInfo.erpCode;
-        this.claimRegisterObj.dealerName = parsedGetDelInfo.name;
-        this.claimRegisterObj.dealerCity = parsedGetDelInfo.city
-        this.claimRegisterObj.dealerState = parsedGetDelInfo.state;
-        this.dealerObj = parsedGetDelInfo;
-        let pickupList = await getPickupLocations({accId:this.claimRegisterObj.dealer})
-        let parsedPickupList = JSON.parse(pickupList);
-        console.log('parsedPickupList:',JSON.stringify(parsedPickupList));
-        //this.pickupOptions = [];
-        //this.pickListOptions = [];
-        for(let i=0;i<parsedPickupList.length;i++){
-        this.pickupOptions = [...this.pickupOptions,{label:parsedPickupList[i].address,value:parsedPickupList[i].recordId}];
-        this.pickListOptions = [...this.pickupOptions,{label:parsedPickupList[i].address,value:parsedPickupList[i].recordId}];
-        }
+    // else if(lable == 'OE Customer' || lable == 'OE Customer/Dealer'){
+    //     this.showLoading = false; 
+    //     console.log('inside OE Value:');
+    //     this.pickupOptions = [];
+    //     this.claimRegisterObj.dealer = value;
+    //     this.claimRegisterObj.dealerId = value;
+    //     this.selectedDealer = value;
+    //     let getDelInfo = await getDealerInfo({accId:this.claimRegisterObj.dealer})
+    //     let parsedGetDelInfo = JSON.parse(getDelInfo);
+    //     //this.claimRegisterObj.dealer = parsedGetDelInfo.id;
+    //     this.claimRegisterObj.dealerCode = parsedGetDelInfo.erpCode;
+    //     this.claimRegisterObj.dealerName = parsedGetDelInfo.name;
+    //     this.claimRegisterObj.dealerCity = parsedGetDelInfo.city
+    //     this.claimRegisterObj.dealerState = parsedGetDelInfo.state;
+    //     this.dealerObj = parsedGetDelInfo;
+    //     let pickupList = await getPickupLocations({accId:this.claimRegisterObj.dealer})
+    //     let parsedPickupList = JSON.parse(pickupList);
+    //     console.log('parsedPickupList:',JSON.stringify(parsedPickupList));
+    //     //this.pickupOptions = [];
+    //     //this.pickListOptions = [];
+    //     for(let i=0;i<parsedPickupList.length;i++){
+    //     this.pickupOptions = [...this.pickupOptions,{label:parsedPickupList[i].address,value:parsedPickupList[i].recordId}];
+    //     this.pickListOptions = [...this.pickupOptions,{label:parsedPickupList[i].address,value:parsedPickupList[i].recordId}];
+    //     }
         
-        //this.showLoading = false;
-    } 
+    //     //this.showLoading = false;
+    // } 
 }
 
-get warrentyOptions(){
-    return this.warrentyOpts;
+get warrantyOptions(){
+    return this.warrantyOpts;
 }
 
 get serialNoOptions(){
@@ -583,19 +664,19 @@ async handleSearch(e){
             this.claimRegisterObj.dealerState = this.dealerObj.state;
             this.pickupOptions = this.pickListOptions;
             console.log('this.claimRegisterObj.dealerId on Search:',this.claimRegisterObj.dealerId);
-            this.claimRegisterObj.warrenty = 'With Warranty';
-            this.claimRegisterObj.warrentytype = this.warrTypeCheck;
+            this.claimRegisterObj.warranty = 'With Warranty';
+            this.claimRegisterObj.warrantytype = this.warrTypeCheck;
 
-            let warrentyResponse = await searchWarranty({searchKey:this.tempRegistrationNo ,dealerId:this.claimRegisterObj.dealerId});
-            let warrentyObj = JSON.parse(warrentyResponse);
-            console.log('warrentyOBJ :', JSON.stringify(warrentyObj) );
-                if(warrentyObj.status == 'success'){
+            let warrantyResponse = await searchWarranty({searchKey:this.tempRegistrationNo ,dealerId:this.claimRegisterObj.dealerId});
+            let warrantyObj = JSON.parse(warrantyResponse);
+            console.log('warrantyOBJ :', JSON.stringify(warrantyObj) );
+                if(warrantyObj.status == 'success'){
                     this.showLoading = false;
                     //this.tempRegistrationNo = '';
                     console.log('inside if of search');
-                    for(let i=0;i<warrentyObj.warrantyList.length;i++){
+                    for(let i=0;i<warrantyObj.warrantyList.length;i++){
                         console.log('inside For:');
-                        this.warrentyOpts = [...this.warrentyOpts,{label:warrentyObj.warrantyList[i].name,value:warrentyObj.warrantyList[i].id}];
+                        this.warrantyOpts = [...this.warrantyOpts,{label:warrantyObj.warrantyList[i].name,value:warrantyObj.warrantyList[i].id}];
                         
                     }
                     this.warrantyDisabled = false;
@@ -607,7 +688,7 @@ async handleSearch(e){
                                 this.template.querySelector('.warrantyInput').setCustomValidity('');
                             }
                             this.template.querySelector('.warrantyInput').reportValidity();
-                }else if(warrentyObj.status == 'error'){
+                }else if(warrantyObj.status == 'error'){
                     this.warrantyDisabled = true;
                     this.showLoading = false;
                     //this.tempRegistrationNo = '';
@@ -854,8 +935,8 @@ async handleNextParent(){
     let claimObj = {
         id:this.claimRegisterObj.claimRecordId ?? '',
         name:'',
-        type:this.claimRegisterObj.warrenty,
-        oeReplacement:this.claimRegisterObj.warrentytype,
+        type:this.claimRegisterObj.warranty,
+        oeReplacement:this.claimRegisterObj.warrantytype,
         warrantyId:this.claimRegisterObj.warrantyName ?? '',
         warrantyNumber:this.claimRegisterObj.warrantyNumber ?? '',
         tyreSerialNo:this.claimRegisterObj.serialNumber1 ?? '',
@@ -915,6 +996,7 @@ async handleNextParent(){
         originalGrooveDepth:this.claimRegisterObj.originalGrooveDepth ? parseFloat(this.claimRegisterObj.originalGrooveDepth):0,
         remainingGrooveDepth:this.claimRegisterObj.remainingGrooveDepth ? parseFloat(this.claimRegisterObj.remainingGrooveDepth):0,
         wear:this.claimRegisterObj.wearPercent ?? 0,
+        odoReading :this.claimRegisterObj.odometerReading ? parseFloat(this.claimRegisterObj.odometerReading):0,
         totalkm:this.claimRegisterObj.totalRunningKms ? parseFloat(this.claimRegisterObj.totalRunningKms):0,
         remark:this.claimRegisterObj.claimRemarks ?? '',
         dealerId :this.claimRegisterObj.dealerId ?? '',
@@ -965,7 +1047,7 @@ handleBack(e){
     this.showChildRegister = false;
     this.showChildThankYou = false;
     this.showClaimParent = true;
-    this.checkWarrntyType(this.claimRegisterObj.warrenty);
+    this.checkWarrntyType(this.claimRegisterObj.warranty);
     this.claimRegisterObj = e.detail;
     console.log('inside back :',JSON.stringify(this.claimRegisterObj));
 }
@@ -984,8 +1066,8 @@ async handleNext(e){
     let claimObj = {
         id:this.objFromRegisterChild.claimRecordId,
         name:'',
-        type:this.objFromRegisterChild.warrenty,
-        oeReplacement:this.objFromRegisterChild.warrentytype,
+        type:this.objFromRegisterChild.warranty,
+        oeReplacement:this.objFromRegisterChild.warrantytype,
         warrantyId:this.objFromRegisterChild.warrantyName,
         warrantyNumber:this.objFromRegisterChild.warrantyNumber,
         tyreSerialNo:this.claimRegisterObj.serialNumber1 ?? '',
@@ -1046,6 +1128,7 @@ async handleNext(e){
         remainingGrooveDepth:parseFloat(this.objFromRegisterChild.remainingGrooveDepth),
         // wear:this.objFromRegisterChild.wearPercent ?? 0,
         wear: !this.objFromRegisterChild.wearPercent || isNaN(this.objFromRegisterChild.wearPercent) ? 0 : this.objFromRegisterChild.wearPercent,
+        odoReading : parseFloat(this.objFromRegisterChild.odometerReading),
         totalkm:parseFloat(this.objFromRegisterChild.totalRunningKms),
         remark:this.objFromRegisterChild.claimRemarks,
         dealerId :this.objFromRegisterChild.dealerId,
@@ -1096,8 +1179,8 @@ async handleSubmitDetails(e){
     let claimObj = {
         id:this.objFromReviewChild.claimRecordId,
         name:'',
-        type:this.objFromReviewChild.warrenty,
-        oeReplacement:this.objFromReviewChild.warrentytype,
+        type:this.objFromReviewChild.warranty,
+        oeReplacement:this.objFromReviewChild.warrantytype,
         warrantyId:this.objFromReviewChild.warrantyName,
         warrantyNumber:this.objFromReviewChild.warrantyNumber,
         tyreSerialNo:this.claimRegisterObj.serialNumber1 ?? '',
@@ -1158,6 +1241,7 @@ async handleSubmitDetails(e){
         remainingGrooveDepth:parseFloat(this.objFromReviewChild.remainingGrooveDepth),
         //wear:this.objFromReviewChild.wearPercent ?? 0,
         wear: !this.objFromRegisterChild.wearPercent || isNaN(this.objFromRegisterChild.wearPercent) ? 0 : this.objFromRegisterChild.wearPercent,
+        odoReading : parseFloat(this.objFromReviewChild.odometerReading),
         totalkm:parseFloat(this.objFromReviewChild.totalRunningKms),
         remark:this.objFromReviewChild.claimRemarks,
         dealerId :this.objFromReviewChild.dealerId,
@@ -1206,7 +1290,7 @@ handleModify(e){
     this.showChildRegister = false;
     this.showChildThankYou = false;
     this.showClaimParent = true;
-    this.checkWarrntyType(this.claimRegisterObj.warrenty);
+    this.checkWarrntyType(this.claimRegisterObj.warranty);
     this.claimRegisterObj = e.detail;
     this.claimRegisterObj={...this.claimRegisterObj};
     console.log('this.claim in modify:', JSON.stringify(this.claimRegisterObj));
@@ -1520,7 +1604,7 @@ async clearRegistrationPage(){
     this.pickupOptions = [];
     await this.fetchOnLoadClaim();
     this.serialNoOpts = [];
-    this.warrentyOpts = []; 
+    this.warrantyOpts = []; 
   
 }
 

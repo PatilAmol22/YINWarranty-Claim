@@ -2,7 +2,7 @@
   @description       : Email,Phone And Address Change Request.
   @author            : Amol Patil/amol.patil@skinternational.com
   @group             : SkI 
-  @last modified on  : 12-11-2024
+  @last modified on  : 19-02-2025
   @last modified by  : Amol Patil/amol.patil@skinternational.com
 **/
 import { LightningElement,track,api,wire} from 'lwc';
@@ -98,6 +98,9 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
         this.value5 = event.detail.value;
         this.crType = event.target.options.find(opt => opt.value === event.detail.value).label;
         this.changeRequestObj.type = this.crType;
+        this.changeRequestObj.oldphoneNo = this.objArrey[0].Contact_Person_Phone__c;
+        this.changeRequestObj.oldphoneNo1 = this.objArrey[0].Secondary_Contact_Person_Phone__c;
+        console.log('oldphoneNo1:', this.objArrey[0].Secondary_Contact_Person_Phone__c);
         if(this.value5 =='email'){
             this.valueSelected1 = true;
             this.valueSelected2 = false;
@@ -116,6 +119,8 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
             this.showButtons = true;
             this.showButtons1 = false;
             this.ShowLoding = false;
+            this.changeRequestObj.oldphoneNo = this.objArrey[0].Contact_Person_Phone__c;
+            console.log('Old Phone=====:',this.objArrey[0].Contact_Person_Phone__c);
         } 
         else if(this.value5 =='phone1'){
             this.valueSelected1 = false;
@@ -126,6 +131,9 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
             this.showButtons = false;
             this.showButtons1 = true;
             this.ShowLoding = false;
+            this.changeRequestObj.oldphoneNo1 = this.objArrey[0].Secondary_Contact_Person_Phone__c;
+            console.log('Old Secondary Phone:===',this.objArrey[0].Secondary_Contact_Person_Phone__c);
+
         }
         else if(this.value5 =='changeBilingaddress'){
             this.valueSelected1 = false;
@@ -256,7 +264,6 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
             await this.clearPincodeDetails();
         }
     }
-    //record.Locations__r.Location_Code__c === null || record.Locations__r.Location_Code__c === undefined  ? "" : record.Locations__r.Location_Code__c;
 
     async clearPincodeDetails() {
         this.changeRequestObj.pincode =  null;
@@ -279,10 +286,26 @@ export default class YinChangeRequest extends NavigationMixin(LightningElement) 
 
     
     handleAddress(e){
-        if(e.target.label == 'Billing Address 1' || e.target.label == 'Shipping Address 1'){
-            this.changeRequestObj.address1 = e.target.value;
-        }else  if(e.target.label == 'Billing Address 2' || e.target.label == 'Shipping Address 2'){
-            this.changeRequestObj.address2 = e.target.value;
+        let addressLabel = e.target.label;
+        let addressValue = e.target.value;
+        const validAddressRegex = /^[a-zA-Z0-9\s,]*$/;
+
+        if (addressValue.length > 50) {
+            e.target.value = addressValue.substring(0, 50);
+            this.showToastmessage('Error', addressLabel + " should not exceed 50 characters.", 'error');
+            return;
+        }
+
+        if (!validAddressRegex.test(addressValue)) {
+            e.target.value = addressValue.replace(/[^a-zA-Z0-9\s,]/g, '');
+            this.showToastmessage('Error',addressLabel + " should not contain special characters except ','.", 'error');
+            return;
+        }
+
+        if(addressLabel == 'Billing Address 1' || addressLabel == 'Shipping Address 1'){
+            this.changeRequestObj.address1 = addressValue;
+        }else  if(addressLabel == 'Billing Address 2' || addressLabel == 'Shipping Address 2'){
+            this.changeRequestObj.address2 = addressValue;
         }
     }
 

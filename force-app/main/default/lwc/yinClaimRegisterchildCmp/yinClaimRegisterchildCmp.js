@@ -2,7 +2,7 @@
  * @description       : Child component
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI
- * @last modified on  : 24-09-2024
+ * @last modified on  : 12-02-2025
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
 **/
 import { LightningElement,api, track,wire} from 'lwc';
@@ -29,17 +29,31 @@ export default class YinClaimRegisterchildCmp extends LightningElement {
 @api pickupOptions = [];
 @track numValue = /^[0-9]+$/;
 @track showLoading = true;
+@track isTotalKMSDisable = true;
+@track isOdoDisablewithout = true;
+@track warrantyDate;
+@track invoiceDate;
 
-                          
 connectedCallback(){
     this.showLoading = false;
-    //console.log('inside coponent2:',JSON.stringify(this.claimCombineChildObj));
+    console.log('inside coponent2:',JSON.stringify(this.claimCombineChildObj));
     this.claimCombineChildObj = {...this.childClaimObj};
+    console.log('inside coponent2 warrDate:',this.claimCombineChildObj.warrantyDate);
+    console.log('inside coponent2 Invoice Date:',this.claimCombineChildObj.invoiceDate);
+    this.claimCombineChildObj.invoiceDate = this.claimCombineChildObj.invoiceDate;
     console.log('@@@inside coponent2:',JSON.stringify(this.claimCombineChildObj));
     this.wearPercent = this.claimCombineChildObj.wearPercent ? this.claimCombineChildObj.wearPercent + '%':'0%';
     this.checkfileUpload();
     //console.log('@@@inside coponent2:',JSON.stringify(this.claimCombineChildObj));
-    console.log('@@@inside coponent2 pickupOptions :',JSON.stringify(this.pickupOptions)); 
+    //console.log('@@@inside coponent2 pickupOptions :',JSON.stringify(this.pickupOptions)); 
+    console.log('Warranty odometer Reading:',this.claimCombineChildObj.warrOdometerReading);
+    //Added by Amol New CR-69 08-01-2025
+    if(this.claimCombineChildObj.warranty == 'With Warranty'){
+        this.isTotalKMSDisable = true;
+    }else if(this.claimCombineChildObj.warranty == 'Without Warranty'){
+        this.isTotalKMSDisable = false;
+    }
+    //End
 }
 
 @wire(getObjectInfo, { objectApiName: CLAIM_OBJECT })
@@ -176,6 +190,7 @@ handleInputChange(e){
     this.checkfileUpload();
 }
 
+
 handleRGDChange(e){
     this.claimCombineChildObj.remainingGrooveDepth = e.target.value;
     let rgd = this.claimCombineChildObj.remainingGrooveDepth;
@@ -198,7 +213,16 @@ handleRGDChange(e){
         this.claimCombineChildObj.wearPercent = null;
         this.wearPercent = null;
         return;
-    }
+    } /*else if (rgd >= 0.1 && rgd <= 0.99) {
+        rgd = 1;
+        this.claimCombineChildObj.remainingGrooveDepth = 1;
+    } */
+        // if (parseFloat(rgd) >= 0.1 && parseFloat(rgd) <= 0.99) {
+        //     this.claimCombineChildObj.remainingGrooveDepth = '1'; // Set to '1' as string
+        //     // Force input field update
+        //     const inputField = e.target;
+        //     inputField.value = '1';
+        // }
     console.log('inside RGD change:', rgd);
     console.log('inside RGD change11:', this.claimCombineChildObj.originalGrooveDepth);
     if(rgd == ''){
@@ -210,12 +234,15 @@ handleRGDChange(e){
     console.log('inside RGD change1:', percentWear);
     if(percentWear >= 50 ){
         this.showToastmessage('Warning', 'Wear % is more than 50%', 'warning');
+    }else if(percentWear >= 0.1 && percentWear <= 0.99){
+        percentWear = 1;
     }
     this.wearPercent = percentWear.toFixed(2) + '%';
     this.claimCombineChildObj.wearPercent = percentWear.toFixed(2);
     console.log('inside RGD change2:', this.claimCombineChildObj.wearPercent);
 
     let warrantyRegistrationDate = new Date(this.claimCombineChildObj.warrantyDate);
+    this.claimCombineChildObj.warrantyDate = warrantyRegistrationDate;
     console.log('warrantyStartDate11:', this.claimCombineChildObj.warrantyDate);
     console.log('warrantyStartDate:', warrantyRegistrationDate);
     let currentDate = new Date();
@@ -232,6 +259,27 @@ handleRGDChange(e){
 
 handleclaimPolicyChange(e){
     this.claimCombineChildObj.claimPolicy = e.detail.value;
+    this.checkfileUpload();
+}
+
+//Added by Amol New CR-69 08-01-2025
+handleOdometerChange(e){
+    this.claimCombineChildObj.odometerReading = e.target.value;
+    let odoReading = this.claimCombineChildObj.odometerReading;
+    if(!this.numValue.test(odoReading)){
+        this.showToastmessage('Error','Please enter valid Odometer Reading.','error');
+        this.claimCombineChildObj.totalRunningKms = null;
+        return;
+    }else if(this.claimCombineChildObj.warranty == 'With Warranty'){
+        console.log('inside odometer :',odoReading);
+        console.log('inside odometer change:',this.claimCombineChildObj.warrOdometerReading);
+        this.claimCombineChildObj.totalRunningKms = odoReading - this.claimCombineChildObj.warrOdometerReading;
+    }
+//End
+
+
+    
+
     this.checkfileUpload();
 }
 
@@ -360,7 +408,7 @@ async handleRemoveAttachment(e){
 checkfileUpload(){
     if(this.claimCombineChildObj.tyreSerialImgId != '' && this.claimCombineChildObj.defectImgOutsideId !='' && this.claimCombineChildObj.defectImgInsideId != '' && this.claimCombineChildObj.treadDepthGaugeId != '' && this.claimCombineChildObj.extraImgId != ''
        && this.claimCombineChildObj.tyreSerialImgId  && this.claimCombineChildObj.defectImgOutsideId  && this.claimCombineChildObj.defectImgInsideId  && this.claimCombineChildObj.treadDepthGaugeId  && this.claimCombineChildObj.extraImgId
-       && this.claimCombineChildObj.natureOfComplaint && this.claimCombineChildObj.remainingGrooveDepth && this.claimCombineChildObj.totalRunningKms
+       && this.claimCombineChildObj.natureOfComplaint && this.claimCombineChildObj.remainingGrooveDepth && this.claimCombineChildObj.odometerReading
       // && parseInt(this.claimCombineChildObj.remainingGrooveDepth) > 0 && parseInt(this.claimCombineChildObj.totalRunningKms) > 0 
        && this.claimCombineChildObj.pickupLocation && this.claimCombineChildObj.claimPolicy
        && this.claimCombineChildObj.damageCause && Array.isArray(this.claimCombineChildObj.damageCause) && this.claimCombineChildObj.damageCause.length > 0

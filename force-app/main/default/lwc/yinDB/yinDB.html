@@ -2,7 +2,7 @@
   @description       : Dealer DashBoard.
   @author            : Amol Patil/amol.patil@skinternational.com
   @group             : Ski
-  @last modified on  : 04-10-2024
+  @last modified on  : 20-01-2025
   @last modified by  : Amol Patil/amol.patil@skinternational.com
 -->
 <template>
@@ -25,9 +25,22 @@
             </lightning-card>
         </div> 
 
-                <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                <!-- <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
                   <img src={yinBanner}  style="height:273px !important; float:right" /> 
-                  <!-- <img src={yinBanner}  style="height:273px !important; width: 100% !important;" />  -->
+                   <img src={yinBanner}  style="height:273px !important; width: 100% !important;" />  
+                </div> -->
+                <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                    <lightning-carousel style="height: 100%; width: 100%;">
+                        <template for:each={images} for:item="image">
+                            <lightning-carousel-image
+                                key={image.id}
+                                src={image.url}
+                                style="height: 100%; width: auto;"
+                                alt="Carousel Image">
+                             
+                            </lightning-carousel-image>
+                        </template>
+                    </lightning-carousel>
                 </div>
         </div>
     </div>

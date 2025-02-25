@@ -1,0 +1,111 @@
+<!--
+  @description       : Mass Upload Sales Target.
+  @author            : Amol Patil/amol.patil@skinternational.com
+  @group             : SKI
+  @last modified on  : 01-06-2024
+  @last modified by  : Amol Patil/amol.patil@skinternational.com
+-->
+<template>
+  <div class="slds-is-relative">
+    <template if:true={showLoading}>
+        <lightning-spinner alternative-text="Please Wait" size="medium" variant="brand"></lightning-spinner>
+</template> 
+   
+    <div class="slds-box slds-theme_default" style="margin-bottom:10px; border-radius:0; border:0;">
+
+      <div class="slds-grid slds-gutters slds-align_absolute-center">
+        <div class="slds-col ">
+          <span> </span>
+        </div>
+
+        <div class="slds-col slds-medium-size_6-of-12  slds-large-size_7-of-12">
+          <div class="slds-box">
+
+            <div class="slds-section__title-action"
+              style="background: #262626 !important; color:#fff; font-weight:600; border-top-left-radius:4px; border-bottom-left-radius:4px; border-top-right-radius:4px; border-bottom-right-radius:4px; font-size:18px; padding:5px;">
+              <lightning-icon label="" icon-name="utility:upload" size="small"
+                style="color:#fff!important;"></lightning-icon>
+              <span style="margin-left:10px; font-size: 16px; font-weight: 500;">Upload Sales Target</span>
+            </div>
+
+            <div class="slds-form-element" style="padding-bottom:15px; padding-top:10px;">
+              <div class="slds-grid" style="justify-content: center;">
+
+
+                <div class="slds-col slds-large-size_5-of-12">
+                    <lightning-combobox
+                    name="Measure Type"
+                    label="Measure Type"
+                    value={targetObj.MeasureType}
+                    placeholder="Please Select Measure Type"
+                    options={measureTypeOptions}
+                    onchange={handleComboboxChange} 
+                    required="true">
+                  </lightning-combobox>
+                </div>
+                <div class="slds-col slds-large-size_5-of-12">
+                    <lightning-file-upload label="Upload CSV File"
+                                          required="true" name="fileUploader"
+                                          accept={acceptedFormats}
+                                          record-id={myRecordId}
+                                          onuploadfinished={handleUploadFinished}
+                                          >
+                        </lightning-file-upload>
+                        <div if:true={targetObj.uploadedFileName} style="color: blue;">
+                          <div>
+                              <b> Uploaded File: {targetObj.uploadedFileName}</b>
+                              <!-- sldsValidatorIgnoreNextLine -->
+                              <lightning-button-icon variant="bare" icon-name="utility:close" size="x-small" alternative-text="Remove" title="Remove" onclick={handleRemoveAttachment} class="slds-m-left_x-small" ></lightning-button-icon>
+                          </div>
+                      </div>
+                      <div class="slds-text-title_caps slds-m-top_small" if:false={targetObj.uploadedFileName}>
+                          <b> Please upload a file of type .csv</b>
+                      </div>
+                </div>
+
+              </div>
+
+            </div>
+
+           
+
+            <div class="slds-form-element slds-p-top_small" align="center"
+              style="margin-top: 15px; padding-top: 20px;border-top:1px solid #c9c9c9;">
+              <lightning-button variant="destructive" label="Submit" title="Submit" onclick={handleSubmit} disabled={isSubmitDisable}
+                class="slds-m-left_x-small"></lightning-button>
+
+              <lightning-button label="Cancel" title="Cancel" onclick={handleClose}
+                class="slds-m-left_x-small"></lightning-button>
+            </div>
+
+            <div class="slds-col slds-large-size_12-of-12" style="margin-top: 15px; border-top:1px solid #c9c9c9;">
+   
+            <P style="font-weight: 600; margin:10px 0;">Instructions</P>
+
+            <ul style="list-style-type: disc;">
+               <li>Sales Target file should be in .csv format.</li>
+               <li>Please avoid adding special character OR alphabets OR blank values in the file.</li>
+               <li>Please avoid changing the column sequence.</li>
+              <li>Download the template from below link based on the Measure Type.</li>
+              <li>The data showcased in the template is a sample data provided for an example.</li>
+              </ul>
+
+            <!-- <P style="font-weight: 600; margin:10px 0;"><a href="">Download</a></P> -->
+            <lightning-button variant="base" label="Download Template" title="Download CSV" onclick={downloadCSV}></lightning-button>
+
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="slds-col">
+          <span></span>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+  </template>

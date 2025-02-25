@@ -2,8 +2,8 @@
  * @description       : 
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI
- * @created date      : 17-10-2024
- * @last modified on  : 17-10-2024
+ * @created date      : 23-01-2025
+ * @last modified on  : 23-01-2025
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
  * Modifications Log
  * Ver   Date         Author                                      Modification
@@ -60,20 +60,20 @@ export default class YinGenerateInvoicePDFCmp extends LightningElement {
     }
 
 
-    handleGetInvoicePDF() {
+  /*  handleGetInvoicePDF() {
         this.showLoading = true;
         if (this.invoiceNumber) {
             //console.log('Inside Get:',this.invoiceNumber);
             getInvoicePDF({ invoiceNumber: this.invoiceNumber,documentType:this.docType })
                 .then(result => {
-                    // //console.log('Inside Result:');
-                    // this.showLoading = false;
-                    // //console.log('PDF Base64:', result);
-                    // this.downloadPDF(result);
+                     console.log('Inside Result:');
                     this.showLoading = false;
-                //console.log('Inside Result:', result);
+                    console.log('PDF Base64:', result);
+                    this.downloadPDF(result);
+                    this.showLoading = false;
+                    console.log('Inside Result:', result);
                 if (result) {
-                    //console.log('PDF Base64:', result);
+                    console.log('PDF Base64:', result);
                     this.downloadPDF(result);
                     this.showToast('Success', 'Invoice PDF downloaded successfully', 'success');
                 } else {
@@ -117,4 +117,64 @@ export default class YinGenerateInvoicePDFCmp extends LightningElement {
         });
         this.dispatchEvent(toastEvent);
     }
+})*/
+handleGetInvoicePDF() {
+    this.showLoading = true;
+    getInvoicePDF({ invoiceNumber: this.invoiceNumber, documentType: this.docType })
+        .then(result => {
+            this.showLoading = false;
+            if (result) {
+
+                this.downloadPDF(result);
+                this.showToast('Success', 'Invoice PDF downloaded successfully', 'success');
+            } else {
+                this.showToast('Warning', 'Failed to generate PDF', 'warning');
+            }
+        })
+        .catch(error => {
+            this.showLoading = false;
+            console.error('Error:', error);
+            this.showToast('Error', 'Failed to fetch invoice PDF', 'error');
+        });
+}
+
+downloadPDF(base64PDF) {
+    // Convert base64 string to Blob
+    const pdfBlob = this.base64ToBlob(base64PDF, 'application/pdf');
+
+    // Create a link and simulate a click to trigger the download
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(pdfBlob);
+    link.download = `${this.docType}_${this.invoiceNumber}.pdf`;
+    link.click();
+}
+
+// Helper function to convert base64 to Blob
+base64ToBlob(base64, mimeType) {
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+        const slice = byteCharacters.slice(offset, offset + 1024);
+        const byteNumbers = new Array(slice.length);
+
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: mimeType });
+}
+
+showToast(title, message, variant) {
+    const toastEvent = new ShowToastEvent({
+        title: title,
+        message: message,
+        variant: variant
+    });
+    this.dispatchEvent(toastEvent);
+}
 }

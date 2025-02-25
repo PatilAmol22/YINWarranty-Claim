@@ -2,8 +2,8 @@
  * @description       : 
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI
- * @created date      : 19-12-2024
- * @last modified on  : 19-12-2024
+ * @created date      : 24-02-2025
+ * @last modified on  : 24-02-2025
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
  * Modifications Log
  * Ver   Date         Author                                      Modification
@@ -249,14 +249,16 @@ export default class YinClaimReview extends LightningElement {
         let obj = await reviewClaim({ claimId: this.recordId});
         this.claimObj = JSON.parse(obj);
         console.log('inside Rej State111:', this.claimObj.status);
-        if(this.claimObj.status == 'Approved'){
-            if(this.claimObj.status == 'Approved' && this.claimObj.isServiceEngineer == true){
+        if(this.claimObj.status == 'Approved' && this.claimObj.isInwardCompleted == true){
+            console.log('inside Save disaable for Jai:', this.claimObj.isInwardCompleted,'-',this.isInwardComplete);
+            this.isSaveDisabled = true;
+            /*if(this.claimObj.status == 'Approved' && this.claimObj.isServiceEngineer == true){
                 console.log('inside Save disaable for engineer:', this.claimObj.status);
                 this.isSaveDisabled = true;
             }else{
                 console.log('inside Save disaable for Head:', this.claimObj.status);
                 this.isSaveDisabled = true;
-            }
+            }*/
            
         }
         else if(this.claimObj.status == 'Rejected Closed' || this.claimObj.status == 'Rejected' ){
@@ -279,6 +281,28 @@ export default class YinClaimReview extends LightningElement {
     handleOEChange(event){
         this.claimObj.oeReplacement = event.target.value;
     }
+
+    //Added by Amol CR-69 10-01-2025
+    handleSerialChange(event){
+            // this.tyreObj.tyreSerialNo = event.target.value;
+        let inputValue = event.target.value;
+
+        const isValidFormat = /^[a-zA-Z0-9]+$/.test(inputValue);
+
+        if (!isValidFormat) {
+            this.isSaveDisabled = true;
+            this.showToast('Error', 'Only letters and numbers are allowed.', 'error');
+            
+        }else if (inputValue.length < 11 || inputValue.length > 13) {
+            this.showToast('Error', 'Serial number must be between 11 and 13 characters.', 'error'); 
+            this.isSaveDisabled = true;
+        }else{
+            this.isSaveDisabled = false;
+        }
+        this.tyreObj.tyreSerialNo = inputValue;
+    }
+    //End of Code
+    
     handlePolicyChange(event){
         this.claimObj.policy = event.target.value;
         if(this.claimObj.policy == 'Commercial'){ 
@@ -305,6 +329,16 @@ export default class YinClaimReview extends LightningElement {
         let wear = parseFloat(((val / this.claimObj.ogd)*100).toFixed(2));
         this.claimObj.wear = wear;
         this.claimObj.revisedWear = wear;
+          
+        //Added by Tejashwini New CR-69 09-01-2025
+        let warrantyRegistrationDate = new Date(this.claimObj.warrantyStartDate);
+        let currentDate = new Date();
+        let timeDifference = currentDate.getTime() - warrantyRegistrationDate.getTime();
+        let daysDifference = timeDifference / (1000 * 3600 * 24);
+
+        this.condition.wear15 = (daysDifference <= 30 && wear >= 15);
+        this.condition.wear30 = (daysDifference <= 90 && wear >= 30);
+        this.condition.wear50 = wear < 50;
         this.calculateAmount();
     }
 
@@ -429,6 +463,7 @@ export default class YinClaimReview extends LightningElement {
         
         if (this.claimObj.manualOtpVerified && this.claimObj.isServiceEngineer == true) {
             this.disableOTP = true;
+            this.condition.otpVerified = true;
         }else{
             this.disableOTP = false;
         }

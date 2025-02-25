@@ -2,7 +2,7 @@
  * @description       : Dealer DashBoard.
  * @author            : Amol Patil/amol.patil@skinternational.com
  * @group             : SKI.
- * @last modified on  : 05-09-2024
+ * @last modified on  : 20-01-2025
  * @last modified by  : Amol Patil/amol.patil@skinternational.com
 **/
 import { LightningElement,api,track,wire } from 'lwc';
@@ -10,20 +10,42 @@ import { LightningElement,api,track,wire } from 'lwc';
 import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import customcss from '@salesforce/resourceUrl/resourceOrderMangmt';
 import yinBanner from '@salesforce/resourceUrl/yinBanner';
+import yinBanner1 from '@salesforce/resourceUrl/yinBanner1';
+import yinBanner2 from '@salesforce/resourceUrl/yinBanner2';
 //import ProfitabilityIMG from '@salesforce/resourceUrl/ProfitablityIMG';
 import dashboardBarChartData from '@salesforce/apex/YinDashBoardBarChartController.dashboardBarChartData';
 import yinDashborad from '@salesforce/resourceUrl/yinDashborad';
 
 export default class YinDB extends LightningElement {
 
-yinBanner=yinBanner;
+//yinBanner=yinBanner;
 yinDashborad=yinDashborad;
+@track images = [];
 
 // @track ProfitabilityIMG;
 
 // connectedCallback(){
 //     this.ProfitabilityIMG = `${ProfitabilityIMG}#logo`;
 // }
+
+connectedCallback() {
+    this.images = [
+        {
+            id: 1,
+            url: yinBanner
+        },
+        {
+            id: 2,
+            url: yinBanner1
+           
+        },
+        {
+            id: 3,
+            url: yinBanner2
+
+        }
+    ];
+}
 
 
 renderedCallback(){
